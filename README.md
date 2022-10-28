@@ -12,3 +12,4 @@ bettr provides users with betting information and education tools.
 - Jared Stefanowicz
 - Kevin Jang
 - Anubhav Kundu
+- Arun Agarwal
