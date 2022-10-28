@@ -11,4 +11,4 @@ bettr provides users with betting information and education tools.
 # Contributors
 - Jared Stefanowicz
 - Kevin Jang
-
+- Anubhav Kundu
