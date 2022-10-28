@@ -10,3 +10,5 @@ bettr provides users with betting information and education tools.
 - bettr will run and open in your browser
 # Contributors
 - Jared Stefanowicz
+- Kevin Jang
+
