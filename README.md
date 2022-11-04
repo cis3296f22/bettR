@@ -16,8 +16,11 @@ Click link (or copy and paste into your web browser.) Functionality confirmed fo
 - Clone the Git Repository
 - Open the app.R file in RStudio
 - Press the green Run App button on the top right of the code editing section
-- bettr will run and open in your browser
+- Bettr will run and open in your browser
+- Instructions on how to use BettR are/will be provided within the application/browser
+
 NOTE: Steps remain the same for Windows, Mac, and Unix.
+
 ## Contributors
 - Jared Stefanowicz
 - Kevin Jang
