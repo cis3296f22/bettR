@@ -64,6 +64,8 @@ server = function(input, output, session){
   })
 }
 
+# Run the application 
+# Here we run the Shiny Application
 # Create Shiny object
 shinyApp(ui = ui, server = server)
 
