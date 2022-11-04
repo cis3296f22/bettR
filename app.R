@@ -1,52 +1,71 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
+# Load R packages
 library(shiny)
+library(shinythemes)
+library(tidyverse)
+library(shinydashboard)
+library(rvest)
 
-# Define UI for application that draws a histogram
-ui <- fluidPage(
+#this can be moved somewhere else. Just for now its left here to run at the start to pull the games for the schedule
+myURL<-read_html("https://www.espn.com/nba/schedule")
+myURLTable<-html_table(myURL)
+todayGames <- myURLTable[[2]]
+print(todayGames)
 
-    # Application title
-    titlePanel("Old Faithful Geyser Data"),
+# Define UI
+ui <- fluidPage(theme = shinytheme("cerulean"),
+                navbarPage(
+                  
+                  "Welcome to BettR!!!!",
+                  tabPanel("Welcome Page",
+                           sidebarPanel(
+                             tags$h3("Input:"),
+                             textInput("txt1", "Given Name:", ""),
+                             textInput("txt2", "Surname:", "")
+                             
+                           ), # sidebarPanel
+                           # Sidebar with controls to select a dataset and specify
+                           # the number of observations to view
+                           sidebarPanel(
+                             selectInput("dataset", "Choose a dataset:",
+                                         choices = c("rock", "pressure", "cars")),
+                             
+                             numericInput("obs", "Observations:", 10)
+                           ),
+                           
+                           mainPanel(
+                             h1("Header 1"),
+                             
+                             h4("Output 1"),
+                             verbatimTextOutput("txtout")
+                           ) # mainPanel
+                           
+                  ), # Navbar 1, tabPanel
+                  tabPanel("Upcoming Games" ,  dashboardHeader(title = "Games for Today"),
+                           dashboardSidebar(width = "300px",
+                                            tableOutput("data1")),
+                           dashboardBody()
+                  ),
+                  tabPanel("Navbar 3", "This panel is intentionally left blank")
+                  
+                ) # navbarPage
+) # fluidPage
 
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
-    )
-)
-
-# Define server logic required to draw a histogram
+# Define server function  
 server <- function(input, output) {
-
-    output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
-    })
+  
+  output$txtout <- renderText({
+    paste( input$txt1, input$txt2, sep = " " )
+  }
+  )
+}
+server = function(input, output, session){
+  output$data1 <- renderTable({
+    head(todayGames[,1:3])
+  })
 }
 
 # Run the application 
 # Here we run the Shiny Application
+# Create Shiny object
 shinyApp(ui = ui, server = server)
+
