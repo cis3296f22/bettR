@@ -8,8 +8,27 @@ library(rvest)
 #this can be moved somewhere else. Just for now its left here to run at the start to pull the games for the schedule
 myURL<-read_html("https://www.espn.com/nba/schedule")
 myURLTable<-html_table(myURL)
-todayGames <- myURLTable[[2]]
+todayGames <- myURLTable[[3]]
+colnames(todayGames)[1] = "MATCHUPWITH"
 print(todayGames)
+print(nrow(todayGames))
+# tableSize <- nrow(todayGames)
+# print(tableSize)
+awayTeam <- todayGames$MATCHUP
+homeTeam <- todayGames$MATCHUPWITH
+
+# print(awayTeam)
+# print(homeTeam)
+gamesForTheDay <- list()
+for (i in 1:nrow(todayGames)){
+  # print(i)
+  # print(awayTeam[[i]])
+  # print(homeTeam[[i]])
+  item <- paste(awayTeam[[i]],homeTeam[[i]],sep= " ")
+  # print(item)
+  gamesForTheDay <- append(gamesForTheDay, item)
+}
+print(gamesForTheDay)
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
@@ -17,18 +36,9 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   
                   "Welcome to BettR!!!!",
                   tabPanel("Welcome Page",
-                           sidebarPanel(
-                             tags$h3("Input:"),
-                             textInput("txt1", "Given Name:", ""),
-                             textInput("txt2", "Surname:", "")
-                             
-                           ), # sidebarPanel
                            # Sidebar with controls to select a dataset and specify
                            # the number of observations to view
                            sidebarPanel(
-                             selectInput("dataset", "Choose a dataset:",
-                                         choices = c("rock", "pressure", "cars")),
-                             
                              numericInput("obs", "Observations:", 10)
                            ),
                            
@@ -43,26 +53,38 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   tabPanel("Upcoming Games" ,  dashboardHeader(title = "Games for Today"),
                            dashboardSidebar(width = "300px",
                                             tableOutput("data1")),
-                           dashboardBody()
+                           dashboardBody(),
+                           selectInput("state", "Choose a game:",
+                                       choices = gamesForTheDay),
+                           textOutput("result"),
+                           
+                           sidebarPanel(
+                              verbatimTextOutput("txtoutput")
+                           )
                   ),
-                  tabPanel("Navbar 3", "This panel is intentionally left blank")
+                  tabPanel("Betting Line", tags$h3("Input:"),
+                           textInput("txt1", "Home Team Bet Line:", ""),
+                           textInput("txt2", "Away Team Bet Line:", "")
+                           )
                   
                 ) # navbarPage
 ) # fluidPage
 
 # Define server function  
-server <- function(input, output) {
-  
+server = function(input, output, session){
   output$txtout <- renderText({
     paste( input$txt1, input$txt2, sep = " " )
   }
   )
-}
-server = function(input, output, session){
   output$data1 <- renderTable({
     head(todayGames[,1:3])
   })
+  output$txtoutput <- renderText({
+    paste("You chose", input$state)
+  })
 }
+
+
 
 # Run the application 
 # Here we run the Shiny Application
