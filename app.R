@@ -9,7 +9,7 @@ library(rvest)
 myURL<-read_html("https://www.espn.com/nba/schedule")
 myURLTable<-html_table(myURL)
 todayGames <- myURLTable[[3]]
-colnames(todayGames)[1] = "MATCHUPWITH"
+colnames(todayGames)[2] = "MATCHUPWITH"
 print(todayGames)
 print(nrow(todayGames))
 # tableSize <- nrow(todayGames)
@@ -38,16 +38,21 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                   tabPanel("Welcome Page",
                            # Sidebar with controls to select a dataset and specify
                            # the number of observations to view
+                           # sidebarPanel(
+                           #   numericInput("obs", "Observations:", 10)
+                           # ),
                            sidebarPanel(
-                             numericInput("obs", "Observations:", 10)
-                           ),
-                           
+                           h1("Warning!"), "With the rise of the world of online sportsbooks, betting has become more reachable than ever, which can be a good and a bad thing. So, make sure that you know your limits and remember - bet only for entertainment purposes. Yes, the rewards may be higher when the odds are greater, but so is the risk of your money being lost. Wagering tons of money can lead to problem gambling, which is why you must always keep yourself in check.
+                            And of course, as a rule of thumb, remember to gamble responsibly."),
                            mainPanel(
-                             h1("Header 1"),
-                             
-                             h4("Output 1"),
+                             h1("Gambling Info"), h2("What are spreads?"), "The spread, also referred to as the line, is used to even the odds between two unevenly matched teams.
+                            Bookmakers set a spread with the hopes of getting equal action on both sides of a game. For example, the Colts are a -3 point favorite against the Texans. The -3 points is the spread. If you want to bet the Colts on the spread, it would mean the Colts need to win by at least three points for you to win the bet. If the Colts win by two points, you would lose the bet because they didn't hit the key number of three.",
+                             h3("What is a money line bet?"), "A moneyline bet is the simplest and most straightforward wager in all of sports betting. It is a bet that has potentially two or three outcomes depending on the sport. When there are two players or teams listed on a moneyline bet, bettors are choosing one player or team to win. All bettors have to do is a pick a winning side — or team or specifically a draw in a soccer/European football match or boxing/MMA fight if a draw is offered as an option. All a person has to do is select a winning team.",
+                             h4("How to game responsibly?"), "Gambling responsibly means taking breaks, not using gambling as a source of income, only gambling with money that you can afford to lose, and setting limits for yourself (both with time and money). Limit-setting is actually easier to do online because a lot of online gambling sites have built-in tools that allow gamblers the ability to set limits directly on the site.
+                                                              For example, an online casino patron can say, “OK, I only want to gamble for two hours today.” Then, all they have to do is put that time into the site and, after two hours, the site will tell the patron that they’ve reached their daily limit. Oftentimes, online sites also include 24-hour cooling off periods, where players can block themselves from using the platform entirely.",
+                             h5("Odds Line "),
                              verbatimTextOutput("txtout")
-                           ) # mainPanel
+                           )#mainPanel
                            
                   ), # Navbar 1, tabPanel
                   tabPanel("Upcoming Games" ,  dashboardHeader(title = "Games for Today"),
@@ -68,7 +73,8 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                            )
                   
                 ) # navbarPage
-) # fluidPage
+)
+# fluidPage
 
 # Define server function  
 server = function(input, output, session){
