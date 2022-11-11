@@ -24,10 +24,8 @@ import rpy2.robjects as ro
 
 '''
 chromedriver_autoinstaller.install()
-
 options = Options()
 options.headless = True
-
 driver = webdriver.Chrome(options = options)
 driver.close()
 '''
@@ -37,12 +35,3 @@ driver.close()
 win_prob = pd.DataFrame()
 with localconverter(ro.default_converter + pandas2ri.converter):
     win_prob = ro.conversion.rpy2py(hoopR.espn_nba_wp(game_id = 401468299))
-
-
-
-
-
-
-
-
-
