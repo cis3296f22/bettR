@@ -44,7 +44,7 @@ insert_wp_away <- function(id) {
 
 lastMonday <- function(x) 7 * floor(as.numeric(x-1+4)/7) + as.Date(1-4, origin="1970-01-01")
 
-#Convert date to an integer usable in hoopR
+#advance days
 get_date <- function(date_string, days) {
   return(toString(as.Date(date_string)+days))
 }
