@@ -1,7 +1,7 @@
 library(hoopR)
 library(tidyverse)
 
-get_winp_home <- function(id)  
+get_winp_home <- function(id)
 {
   wp = -1
   tryCatch(
@@ -40,3 +40,5 @@ newdf <- transform(newdf, winpb_away= ifelse(winpb_home!=-1, 1-winpb_home, -1))
 #newdf$winpb_away <- mapply(get_winp_away,newdf$game_id)
 head(newdf)
 write.csv(newdf, 'ESPN_PastData.csv')
+
+print(get_winpb_home(401360358))
