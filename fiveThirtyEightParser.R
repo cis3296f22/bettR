@@ -9,4 +9,4 @@ FiveThirtyEight_Predictions <- FiveThirtyEight_Predictions %>%
   dplyr::rename(fivethirtyeight_home_wp = elo_prob1)
 
 head(FiveThirtyEight_Predictions)
-write.csv(FiveThirtyEight_Predictions, 'FiveThirtyEight_PastData.csv')
+write.csv(FiveThirtyEight_Predictions, 'FiveThirtyEight.csv')
