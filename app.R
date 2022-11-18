@@ -6,32 +6,38 @@ library(shinydashboard)
 library(rvest)
 
 #this can be moved somewhere else. Just for now its left here to run at the start to pull the games for the schedule
-myURL<-read_html("https://www.espn.com/nba/schedule")
-myURLTable<-html_table(myURL)
-todayGames <- myURLTable[[1]]
-tomorrowGames <- myURLTable[[2]]
+getURLINFO <- function(){
+  myURL<-read_html("https://www.espn.com/nba/schedule")
+  myURLTable<-html_table(myURL)
+  return(myURLTable)
+}
+
+totalGames <- getURLINFO()
+print(nrow(totalGames))
+todayGames <- totalGames[[1]]
+tomorrowGames <- totalGames[[2]]
 colnames(todayGames)[2] = "MATCHUPWITH"
-# print(todayGames)
-# print(tomorrowGames)
-print(myURLTable)
-print(nrow(todayGames))
-# tableSize <- nrow(todayGames)
-# print(tableSize)
+
 awayTeam <- todayGames$MATCHUP
 homeTeam <- todayGames$MATCHUPWITH
 
 # print(awayTeam)
 # print(homeTeam)
-gamesForTheDay <- list()
+gamesToSelect <- list()
 for (i in 1:nrow(todayGames)){
-  # print(i)
-  # print(awayTeam[[i]])
-  # print(homeTeam[[i]])
   item <- paste(awayTeam[[i]],homeTeam[[i]],sep= " ")
-  # print(item)
-  gamesForTheDay <- append(gamesForTheDay, item)
+  gamesToSelect <- append(gamesToSelect, item)
 }
-print(gamesForTheDay)
+
+colnames(tomorrowGames)[2] = "MATCHUPWITH"
+awayTeam <- tomorrowGames$MATCHUP
+homeTeam <- tomorrowGames$MATCHUPWITH
+for (i in 1:nrow(tomorrowGames)){
+  
+  item <- paste(awayTeam[[i]],homeTeam[[i]],sep= " ")
+  gamesToSelect  <- append(gamesToSelect , item)
+}
+print(gamesToSelect)
 
 # Define UI
 ui <- fluidPage(theme = shinytheme("cerulean"),
@@ -58,16 +64,17 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
                            )#mainPanel
                            
                   ), # Navbar 1, tabPanel
-                  tabPanel("Upcoming Games" ,  dashboardHeader(title = h4("Games to be played")),
+                  tabPanel("Upcoming Games",
                            # dashboardSidebar(tableOutput("data1")),
                            dashboardBody(fluidRow(
-                             box(h4(paste("Games for today ",Sys.Date())),tableOutput("data1")),
-                             box(h4("Games for tomorrow",(Sys.Date()+1)),tableOutput("data2"))),
+                             box(h4(paste("Games for ",Sys.Date())),tableOutput("data1")),
+                             box(h4("Games for ",(Sys.Date()+1)),tableOutput("data2"))),
+                             
                            
                            
                            box(
                              mainPanel(selectInput("state", "Choose a game:",
-                                                 choices = gamesForTheDay),
+                                                 choices = gamesToSelect),
                                      textOutput("result"),
                               verbatimTextOutput("txtoutput")
                               )
