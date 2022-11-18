@@ -1,0 +1,76 @@
+.top-section {
+  background-color: #66cc33;
+  text-align: center;
+  color: white;
+  padding-bottom: 32pt;
+}
+
+header {
+  background-color: #66cc33;
+  text-align: center;
+}
+
+footer {
+  background-color: #66cc33;
+  color black;
+  text-align: center;
+}
+
+.black-section {
+    background-color: black;
+    color: white;
+}
+
+.green-section {
+  background-color: #66cc33;
+  color: black;
+}
+
+.black-r {
+  color: black;
+}
+
+header, footer, div, body {
+  padding: 0;
+  margin: 0;
+  float: center;
+  display: inline-block;
+  width: 100%;
+  background-color: #66cc33;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+  padding-left: 8pt;
+}
+
+* {
+    font-family: Helvetica, Arial, Sans-Serif;
+}
+
+h1 {
+  font-size: 40pt;
+}
+
+h2 {
+  font-size: 24pt;
+  margin-top: 0;
+  margin-bottom: 4pt;
+}
+
+h3 {
+  text-align: left;
+  font-size: 24pt;
+  padding-left: 10%
+}
+
+p {
+  padding-left: 20%;
+  padding-right: 20%;
+}
+
+button {
+  float: right;
+  margin-right: 10%
+}
