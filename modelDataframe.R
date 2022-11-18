@@ -16,7 +16,7 @@ ESPN_Predictions <- ESPN_Predictions %>%
   dplyr::rename(homewp = winpb_home, home_team = home_team_abb, away_team = away_team_abb) %>%
   dplyr::filter(homewp != -1)
 
-#New Dataframe that appends two datasets:
+#New Data frame that appends two data sets:
 combined <- FiveThirtyEight_Predictions %>%
   dplyr::bind_rows(ESPN_Predictions)
 
