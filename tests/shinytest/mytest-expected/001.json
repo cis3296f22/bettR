@@ -1,0 +1,13 @@
+{
+  "input": {
+    "state": "San Antonio @  Sacramento",
+    "txt1": "100",
+    "txt2": "-100"
+  },
+  "output": {
+    "txtout": "100 -100"
+  },
+  "export": {
+
+  }
+}
