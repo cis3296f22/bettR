@@ -104,7 +104,7 @@ bettingLine <- tabPanel("Betting Line", tags$h3("Input:"),
 # How to make sure it prioritizes stylesheet
 # tags$iframe(src="index.html",width="100%", height="500%")
 # , includeHTML("index.html"), includeCSS("stylesheet.css")
-newHome <- tabPanel("Home", h1("home"), img(src="bettrIcon.png"), a(href="https://jaredstef.me", "Jared Stefanowicz"), actionButton("link1", ""), includeCSS("www/app.css"))
+newHome <- tabPanel("Home", h1("home"), img(src="bettrIcon.png"), a(href="https://jaredstef.me", "Jared Stefanowicz"), actionButton("link1", ""))
 newGames <- tabPanel("Games",
                      h1("Games"),
                      dateInput("date1", "Date"),
@@ -230,7 +230,7 @@ newView <- tabPanel("View",
                     )
 
 # Define UI
-ui <- fluidPage(theme="app.css",
+ui <- fluidPage(theme="",
                 navbarPage(
                   # "Welcome to BettR!!!!",
                   # welcomePage, # Navbar 1, tabPanel

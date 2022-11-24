@@ -80,10 +80,6 @@ h2 {
     padding-bottom: 16pt;
 }
 
-#currentPage {
-    color: rgba(256, 256, 256, 0.8);
-}
-
 footer {
     text-align: center;
     padding-top: 32pt;
@@ -92,4 +88,12 @@ footer {
 
 #footerText {
     color: rgba(256, 256, 256, 0.6)
+}
+
+#bettr:hover {
+    cursor: pointer;
+}
+
+#currentPage a {
+    color: white;
 }

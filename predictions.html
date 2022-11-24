@@ -7,21 +7,27 @@
     </head>
 
     <header>
-        <img src="bettrIcon.png"/>        
+        <img onclick="window.location.reload();" id="bettr" src="bettrIcon.png"/>
         <nav>
-            {{ actionLink("gamesLink", "Games") }}
-                {{ actionLink("predictionsLink", "Predictions") }}
+                {{ actionLink("gamesLink", "Games") }}
+                <span id="currentPage">{{ actionLink("predictionsLink", "Predictions") }}</span>
                 {{ actionLink("resourcesLink", "Resources") }}
-                <a href="https://github.com/cis3296f22/bettR">About</a>
+                <a href="https://github.com/cis3296f22/bettR#readme">About</a>
         </nav>
     </header>
 
     <body>
         <div class="transition"/>
+
+        {{ selectInput("times", "Time Range", c("1 Month", "6 Months", "1 Year", "3 Years")) }}
+
+        {{ plotOutput("projectionsPlot", width="70%", height="320pt") }}
+        {{ tableOutput("projectionsTable") }}
+
+        <link rel="stylesheet" href="predictionsStyles.css">
     </body>
     <footer>
         <p id="footerText">Bettr Sports Betting 2022</p>
-        <link rel="stylesheet" href="predictionsStyles.css">
       </footer>
 </div>
 <!-- </html> -->

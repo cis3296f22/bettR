@@ -7,12 +7,12 @@
     </head>
 
     <header>
-        <img src="bettrIcon.png"/>        
+        <img onclick="window.location.reload();" id="bettr" src="bettrIcon.png"/>
         <nav>
-            {{ actionLink("gamesLink", "Games") }}
+                {{ actionLink("gamesLink", "Games") }}
                 {{ actionLink("predictionsLink", "Predictions") }}
-                {{ actionLink("resourcesLink", "Resources") }}
-                <a href="https://github.com/cis3296f22/bettR">About</a>
+                <span id="currentPage">{{ actionLink("resourcesLink", "Resources") }}</span>
+                <a href="https://github.com/cis3296f22/bettR#readme">About</a>
         </nav>
     </header>
 
@@ -44,10 +44,10 @@
                 </p>
             </div>
         </div>
+        <link rel="stylesheet" href="baseStyles.css">
     </body>
     <footer>
         <p id="footerText">Bettr Sports Betting 2022</p>
-        <link rel="stylesheet" href="baseStyles.css">
       </footer>
 </div>
 <!-- </html> -->

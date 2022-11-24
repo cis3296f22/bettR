@@ -2,32 +2,33 @@
     <head>
         <meta charset="utf-8">
         <title>Bettr Sports Betting | View Game</title>
-        <link rel="stylesheet" href="viewStyle.css">
         </head>
     
         <header>
-            <img src="bettrIcon.png"/>        
+            <img onclick="window.location.reload();" id="bettr" src="bettrIcon.png"/>
             <nav>
-                <a href="#"><span id="currentPage">Games</span></a>
-                <a href="#">Predictions</a>
-                <a href="#">Resources</a>
-                <a href="#">About</a>
+                <span id="currentPage">{{ actionLink("gamesLink", "Games") }}</span>
+                {{ actionLink("predictionsLink", "Predictions") }}
+                {{ actionLink("resourcesLink", "Resources") }}
+                <a href="https://github.com/cis3296f22/bettR#readme">About</a>
             </nav>
         </header>
     
         <body>
             <div class="transition"/>
-            <h1 id="firstTitle">November 7th, 2022</h1>
-            <h1>New York Nets @ Philadelphia 76ers</h1>
+            <h1 id="firstTitle">{{ gameDate }}</h1>
+            <h1>{{ gameString }}</h1>
     
             <div class="matchup">
-                <img class="team-image" src="team-icons/Brooklyn Nets logo.svg"/>
+                <img class="team-image" src="team-icons/{{awayIcon}}"/>
                 <h3 id="at">@</h3>
-                <img class="team-image"src="team-icons/Philadelphia 76ers logo.svg"/>
+                <img class="team-image"src="team-icons/{{homeIcon}}"/>
             </div>
             
             <h2>Bet Screener</h2>
     
+            <!-- TODO Calculator inputs here -->
+
             <label id="firstLabel" for="amount">Amount</label>
             <input type="text" id="amount">
     
@@ -57,4 +58,5 @@
             </div>
     
         </body>
+        <link rel="stylesheet" href="viewStyle.css">
 </div>

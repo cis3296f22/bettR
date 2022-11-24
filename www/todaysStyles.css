@@ -64,6 +64,7 @@ a {
     padding-left: 8pt;
     color: black;
     margin-top: 8pt;
+    font-size: 14pt;
 }
 
 button {
@@ -131,4 +132,13 @@ h1 {
     position: relative;
     padding-left: 10%;
     padding-top: 64pt;
+}
+
+
+#bettr:hover {
+    cursor: pointer;
+}
+
+#currentPage a {
+    color: white;
 }

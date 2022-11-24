@@ -16,7 +16,7 @@ header {
     height: 64pt;
 }
 
-img {
+#bettr {
     height: 64pt;
     width: max-content;
     padding-left: 10%;
@@ -92,4 +92,18 @@ footer {
 
 #footerText {
     color: rgba(256, 256, 256, 0.6)
+}
+
+#projectionsPlot {
+    margin: 0 auto;
+    width: 70%;
+}
+
+
+#bettr:hover {
+    cursor: pointer;
+}
+
+#currentPage a {
+    color: white;
 }

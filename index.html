@@ -13,7 +13,7 @@
         {{ actionLink("gamesLink", "Games") }}
         {{ actionLink("predictionsLink", "Predictions") }}
         {{ actionLink("resourcesLink", "Resources") }}
-        <a href="https://github.com/cis3296f22/bettR">About</a>
+        <a href="https://github.com/cis3296f22/bettR#readme">About</a>
       </p>
     </nav>
   </header>
@@ -40,7 +40,7 @@
         </p>
         <div class="button-area">
           <h4>Access Free Tips and Strategies</h4>
-          <button type="button" name="button">
+          <button type="button" name="button" onclick="document.getElementById('resourcesLink').click();">
             <img height="64pt" width="64pt" class="buttonImg" src="next-button-icon.png"/>
           </button>
         </div>
@@ -56,7 +56,7 @@
 
         <div class="button-area">
           <h4>Access Statistical Projections</h4>
-          <button id="stat" type="button" name="button">
+          <button id="stat" type="button" name="button" onclick="document.getElementById('predictionsLink').click();">
             <img height="64pt" width="64pt" class="buttonImg" src="next-button-icon.png"/>
           </button>
         </div>
@@ -71,7 +71,7 @@
 
         <div class="button-area">
           <h4>Access Bet Screening</h4>
-          <button type="button" name="button">
+          <button type="button" name="button" onclick="document.getElementById('gamesLink').click();">
             <img height="64pt" width="64pt" class="buttonImg" src="next-button-icon.png"/>
           </button>
         </div>
