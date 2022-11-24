@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {{ headContent() }}
+    <meta charset="utf-8">
+    <title>Bettr Sports Betting</title>
+    {{tabsetPanel(
+  id="tabs",
+  type="hidden",
+  tabPanelBody("home", htmlTemplate("index.html")),
+  tabPanelBody("resources", "test")
+)}}
+  </head>
+</html>
