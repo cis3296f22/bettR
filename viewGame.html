@@ -24,39 +24,43 @@
                 <h3 id="at">@</h3>
                 <img class="team-image"src="team-icons/{{homeIcon}}"/>
             </div>
+
+            {{ tableOutput("gameProjections") }}
             
             <h2>Bet Screener</h2>
-    
-            <!-- TODO Calculator inputs here -->
 
-            <label id="firstLabel" for="amount">Amount</label>
-            <input type="text" id="amount">
-    
-            <label for="spread">Spread</label>
-            <input type="text" id="spread">
-    
-            <label for="amount">Probability</label>
-            <input type="text" id="probability">
-    
-            <label for="bettr">Use Bettr Projection</label>
-            <input type="checkbox" id="bettr">
+            {{ textInput("firstLabel", "Amount")  }}
+            {{ textInput("spread", "Spread")  }}
+            {{ textInput("probability", "Probability")  }}
+            {{ checkboxInput("bettr", "Use Bettr Projection", value=TRUE) }}
             
             <div id="calcResults">
-                <h3>Expected Winnings</h3>
-                <h3 class="red">-$9.60</h3>
+                <h3 class="winnings">Expected Winnings</h3>
+
+                <h3 class="winnings result">{{ htmlOutput("winnings") }}</h3>
+
     
-                <h4>Weekly for 1 Month</h4>
-                <h4 class="red">-$38.40</h4>
+                <h3>Weekly for 1 Month</h4>
+
+                <h4 class="result">{{ htmlOutput("mo1") }}</h3>
     
-                <h4>Weekly for 6 Months</h4>
-                <h4 class="red">-$249.60</h4>
+                <h3>Weekly for 6 Months</h4>
+
+                <h4 class="result">{{ htmlOutput("mo6") }}</h3>
     
-                <h4>Weekly for 1 Year</h4>
-                <h4 class="red">-$499.20</h4>
-                
-                <h4 class="green">Take -354 Odds or Lower</h4>
+                <h3>Weekly for 1 Year</h4>
+                <h4 class="result">{{ htmlOutput("yr1") }}</h3>
+
+                <h4 id="take">
+                    {{ htmlOutput("take") }}
+                </h4>
             </div>
     
         </body>
+
+        <footer>
+            <p id="footerText">Bettr Sports Betting 2022</p>
+            <a id="footerText" href="TOS-Disclaimer.html">Disclaimer and Terms of Service</a>
+          </footer>
         <link rel="stylesheet" href="viewStyle.css">
 </div>

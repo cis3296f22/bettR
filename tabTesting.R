@@ -1,13 +1,11 @@
 # Load R packages
 library(shiny)
-# library(shinythemes)
-library(tidyverse)
 library(shinydashboard)
-library(rvest)
 
+# May want to set working directory to where it is run
 setwd("/Users/jaredstef/Developer/bettR/")
 
-# Maps 538 Team Abbreviations to Full Names and Icons
+# DataFrame mapping 538 Team Abbreviations to Full Names and Icons
 lookup <- data.frame(
   abbrev=c(
     "ATL",
@@ -73,6 +71,7 @@ lookup <- data.frame(
     "Utah Jazz",
     "Washington Wizards"
     ),
+  # The display name for some teams is shortened so they fit on one line
   show=c(
     "Atlanta Hawks",
     "Boston Celtics",
@@ -117,21 +116,18 @@ lookup <- data.frame(
 lookup$icon <- paste0(lookup$full, " logo.svg")
 
 df538 <- read.csv('FiveThirtyEight.csv')
-# df538$date <- as.Date(df538$date)
+
 # Today's Games -> Table Rows 
-
-as.character(Sys.Date())
-
-
+# Grab the next 7 days of games from 538
 todays <- df538[(df538$date >= as.character(Sys.Date())) & (df538$date <= as.character(Sys.Date()+7)),]
+
+# Generate unique ids for each game. This will but the button ids used with the observers
 todays$obs <- apply(todays, 1, FUN=function(x) { 
   game <- head(todays[x,], 1)
   gsub("-", "x", paste(game$team2, game$team1, game$date, sep="."))
   })
 
-
-
-
+# Generate the rows based on the 538 data
 getGames <- apply(todays, 1, FUN=function(x) {
     game <- head(todays[x,], 1)
     awayInfo <- lookup[lookup$abbrev == game$team2,]
@@ -156,10 +152,7 @@ getGames <- apply(todays, 1, FUN=function(x) {
                     </div>', collapse="")
     })
 
-# <button onclick="window.alert(\'worked!\')">View</button>
-
 getGames <- paste(getGames, collapse="")
-
 getGames <- htmlTemplate(document_=FALSE, text_=getGames)
 
 #           X       date season team1 team2 fivethirtyeight_home_wp
@@ -167,32 +160,36 @@ getGames <- htmlTemplate(document_=FALSE, text_=getGames)
 #print(head(todays[x,], 1))
 #print('------')
 
-# Thursday, November 17th, 2022
-
 todayString <- paste("Today to ", format(Sys.Date()+7, format="%A, %B %d, %Y") ,collapse="")
 
 ui <- htmlTemplate("index.html")
 
+selectedGame <- NA 
+
 server <- function(input, output, session) { 
+  
+  # Games Navigation
   observeEvent(input$gamesLink, {
-    
     print("clicked games!")
     removeUI("#home", immediate = TRUE, session=session)
     insertUI("html", where="afterBegin", htmlTemplate("todaysGames.html", getGames=getGames, todayString=todayString), immediate = TRUE, session=session)
   })
   
+  # Predictions Navigation
   observeEvent(input$predictionsLink, {
     print("clicked predictions!")
-    
     removeUI("#home", immediate = TRUE, session=session)
     insertUI("html", where="afterBegin", htmlTemplate("predictions.html"), immediate = TRUE, session=session)
   })
+  
+  # Resources Navigation
   observeEvent(input$resourcesLink, {
     print("clicked resources!")
     removeUI("#home", immediate = TRUE, session=session)
     insertUI("html", where="afterBegin", htmlTemplate("resources.html"), immediate = TRUE, session=session)
   })
   
+  # The main plot on the projections page
   output$projectionsPlot <- renderPlot({
     s1 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
     s2 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
@@ -203,7 +200,9 @@ server <- function(input, output, session) {
     lines(c(1:365), s2, col="blue")
     lines(c(1:365), s3, col="green")
     legend(x ="topleft", col=c("red", "green", "blue"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite"), lwd=1, lty=c(1,1,1))
-  }, width=800, height=500)
+  }, width=800, height=400)
+  
+  # The main table on the projections page 
   
   exampleModels <- data.frame(
     Source=c("Bettr Composite", "ESPN", "FiveThirtyEight"),
@@ -213,7 +212,25 @@ server <- function(input, output, session) {
     AccuracyOverall=c(0.81, 0.77, 0.80)
   )
   names(exampleModels) <- c("Source", "Start Date", "90 Day Accuracy", "1 Year Accuracy", "Overall Accuracy")
+  
   output$projectionsTable <- renderTable({ exampleModels })
+  
+  # The main table when viewing a game
+  
+  viewModels <- data.frame(
+    Source=c("Bettr Composite", "ESPN", "FiveThirtyEight"),
+    Home.Win=c("78%", "85%", "82%"),
+    Away.Win=c("22%", "15%", "18%"),
+    Accuracy90=c(0.82, 0.71, 0.78),
+    Accuracy1yr=c(0.82, 0.71, 0.84),
+    AccuracyOverall=c(0.81, 0.77, 0.80)
+  )
+  
+  names(viewModels) <- c("Source", "Home Win %", "Away Win %", "90 Day Accuracy", "1 Year Accuracy", "Overall Accuracy")
+  
+  output$gameProjections <- renderTable({ viewModels })
+  
+  # Logic for the view game page
   
   handleButton <- function(x) {
     gameInfo <- todays[todays$obs == x,]
@@ -225,8 +242,8 @@ server <- function(input, output, session) {
     
     removeUI("#home", immediate = TRUE, session=session)
     insertUI("html", where="afterBegin", htmlTemplate("viewGame.html", gameDate=gameDate, gameString=gameString, awayIcon=awayIcon, homeIcon=homeIcon), immediate = TRUE, session=session)
-    print("Clicked!")
-    print(x)
+    
+    selectedGame <- x
   }
   
   # Hack to register all of the buttons to use the same handler function above
@@ -240,12 +257,45 @@ server <- function(input, output, session) {
       })')))
   })
   
-  print(input)
-  print(class(input))
-
+  # Inputs for view game calculator
   
+  observeEvent(input$firstLabel, {
+    print(input$firstLabel)
+  })
+  
+  observeEvent(input$spread, {
+    print(input$spread)
+  })
+  
+  observeEvent(input$probability, {
+    print(input$probability)
+  })
+  
+  observeEvent(input$bettr, {
+    print(input$bettr)
+  })
+  
+  result <- -9.60
+  color <- "red"
+  
+  if(result > 0) {
+    color <- "green"
+  }
+  
+  output$winnings <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result, nsmall=2, big.mark=","),"</span>")))
+  
+  output$mo1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4, nsmall=2, big.mark=","),"</span>")))
+  
+  output$mo6 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4*6, nsmall=2, big.mark=","),"</span>")))
+  
+  output$yr1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4*12, nsmall=2, big.mark=","),"</span>")))
+  
+  output$take <- renderUI(htmlTemplate(text_="Take -354 Odds or Lower"))
 }
 
 shinyApp(ui = ui, server = server)
+
+# Was looking into the runApp function for when deploying in the future...
+# Prob won't use it but here as a reminder
 # app <- 
 # runApp(app, appDir = getwd())

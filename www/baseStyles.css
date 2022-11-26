@@ -87,7 +87,8 @@ footer {
 }
 
 #footerText {
-    color: rgba(256, 256, 256, 0.6)
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 12pt;
 }
 
 #bettr:hover {

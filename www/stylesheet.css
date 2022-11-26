@@ -10,12 +10,6 @@ header {
   text-align: center;
 }
 
-footer {
-  background-color: #66cc33;
-  color: black;
-  text-align: center;
-}
-
 .black-section {
     background-color: black;
     color: white;
@@ -78,13 +72,6 @@ p {
   font-size: 16pt;
 }
 
-/* button {
-  float: right;
-  margin-right: 10%;
-  margin-bottom: 16pt;
-  /* background-color: rgba(0, 0, 0, 0); 
-} */
-
 button {
   float: right;
   margin-left: 16pt;
@@ -114,4 +101,19 @@ h4 {
 #stat {
   filter: none;
   background-color: inherit;
+}
+
+footer {
+  text-align: center;
+  margin-bottom: 32pt;
+}
+
+#footerContent {
+  color: black;
+  margin-bottom: 32pt;
+}
+
+#disclaimer {
+  color: black;
+  margin-bottom: 32pt;
 }

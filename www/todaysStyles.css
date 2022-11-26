@@ -142,3 +142,14 @@ h1 {
 #currentPage a {
     color: white;
 }
+
+footer {
+    text-align: center;
+    padding-top: 32pt;
+    padding-bottom: 32pt;
+}
+
+#footerText {
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 12pt;
+}

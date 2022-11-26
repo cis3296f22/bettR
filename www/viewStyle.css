@@ -60,6 +60,7 @@ h1 {
     width: 90%;
     padding-left: 10%;
     padding-top: 32pt;
+    padding-bottom: 32pt;
 }
 
 .team-image {
@@ -88,7 +89,7 @@ h2 {
 
 #calcResults {
     text-align: center;
-    
+    margin-top: 16pt;
 }
 
 .red {
@@ -101,18 +102,23 @@ h2 {
     margin-bottom: 8pt;
 }
 
-#firstLabel {
-    margin-left: 10%;
-}
-
-input {
+input[type=text] {
     margin-bottom: 16pt;
     margin-right: 16pt;
     color: black;
+    border-radius: 4pt;
+    border: none;
+    height: 16pt;
+    width: 96pt;
+    text-align: center;
 }
 
 h3 {
     font-size: 16pt;
+}
+
+#firstLabel-label {
+    margin-left: 10%;
 }
 
 #bettr:hover {
@@ -121,4 +127,70 @@ h3 {
 
 #currentPage a {
     color: white;
+}
+
+.form-group {
+    display: inline;
+}
+
+.checkbox {
+    display: inline;
+}
+
+h4 {
+    margin-top: 4pt;
+    margin-bottom: 16pt;
+    font-size: 16pt;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 18pt;
+    font-weight: normal;
+}
+
+.winnings {
+    font-weight: bold;
+    font-size: 20pt;
+}
+
+#take {
+    text-decoration: underline;
+    color:#66cc33;
+    margin-top: pt;
+    margin-bottom: 16pt;
+}
+
+table {
+    margin-left: 10%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1pt solid;
+    padding: 8pt;
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: #66cc33;
+}
+
+.result {
+    padding-bottom: 16pt;
+}
+
+footer {
+    text-align: center;
+    padding-top: 32pt;
+    padding-bottom: 32pt;
+}
+
+#footerText {
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 12pt;
 }

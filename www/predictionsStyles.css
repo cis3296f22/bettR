@@ -91,12 +91,15 @@ footer {
 }
 
 #footerText {
-    color: rgba(256, 256, 256, 0.6)
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 12pt;
 }
 
 #projectionsPlot {
-    margin: 0 auto;
+    margin-left: 10%;
+    margin-bottom: 32pt;
     width: 70%;
+    height: 400pt;
 }
 
 
@@ -107,3 +110,15 @@ footer {
 #currentPage a {
     color: white;
 }
+
+table {
+    margin-left: 10%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1pt solid;
+    padding: 8pt;
+    text-align: center;
+}
+
