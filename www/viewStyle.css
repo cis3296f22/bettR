@@ -67,6 +67,7 @@ h1 {
     height: 128pt;
     width: 128pt;
     padding-left: 0;
+    object-fit: scale-down;
 }
 
 #at {

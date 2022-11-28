@@ -52,6 +52,7 @@ a {
     height: 32pt;
     width: 32pt;
     margin-top: 8pt;
+    object-fit: scale-down;
 }
 
 .side {

@@ -29,10 +29,10 @@
             
             <h2>Bet Screener</h2>
 
-            {{ textInput("firstLabel", "Amount")  }}
-            {{ textInput("spread", "Spread")  }}
-            {{ textInput("probability", "Probability")  }}
-            {{ checkboxInput("bettr", "Use Bettr Projection", value=TRUE) }}
+            {{ textInput("firstLabel", "Amount", value="100") }}
+            {{ textInput("spread", "Spread", value="150")  }}
+            {{ textInput("probability", "Probability", value="50")  }}
+            {{ checkboxInput("bettr", "Use Bettr Projection", value=FALSE) }}
             
             <div id="calcResults">
                 <h3 class="winnings">Expected Winnings</h3>

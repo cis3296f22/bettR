@@ -164,10 +164,105 @@ todayString <- paste("Today to ", format(Sys.Date()+7, format="%A, %B %d, %Y") ,
 
 ui <- htmlTemplate("index.html")
 
-selectedGame <- NA 
+selectedGame <- NA
 
 server <- function(input, output, session) { 
+  runCalculator <- function() {
+    tryCatch({
+      # Validated Against 
+      # https://betworthy.com/betting-calculators/odds-value/
+      # https://oddsjam.com/betting-calculators/expected-value
+      wager <- as.numeric(input$firstLabel)
+      probability <- as.numeric(input$probability)
+      spread <- as.numeric(input$spread)
+      
+      print(wager)
+      print(probability)
+      print(spread)
+      
+      # Positive - Bet 100, Win 100+spread 
+      # Negative - Bet The Spread, win the spread + 100
+      
+      
+      validNumbers <- is.na(probability) | is.na(spread) | is.na(wager)
+      
+      if (validNumbers) {
+        print("Numbers are not valid")
+        stop("Numbers are not valid")
+      }
+      
+      probRange <- probability >= 0 & probability <= 100
+      spreadRange <- abs(spread) >= 100
+      wagerRange <- wager >= 0
+      
+      validRanges <- probRange & spreadRange & wagerRange
+      
+      if (!validRanges) {
+        print("Not valid ranges")
+        stop("Not valid ranges")
+      }
+      
+      probability <- probability / 100
+      print("probability")
+      print(probability)
+      
+      if (spread < 0) {
+        print("less than 0")
+        x <- ((probability*100)+((1-probability)*spread))*(wager/abs(spread))
+        return(x)
+      } else if (spread > 0) {
+        print("more than 0")
+        x <- ((probability*spread)+((1-probability)*-100))*(wager/100)
+        return(x)  
+      }
+    }, error = function(e) {
+      print("Bad Value")
+      print(e)
+      return(NA)
+    })
+  }
   
+
+  result <- reactive({
+    print(runCalculator())
+    runCalculator()
+    })
+  
+  breakeven <- reactive({
+    
+    tryCatch({
+      probability <- as.numeric(input$probability)
+      
+      if (is.na(probability)) {
+        print("Numbers are not valid")
+        stop("Numbers are not valid")
+      }
+      
+      probRange <- probability >= 0 & probability <= 100
+      
+      if (!probRange) {
+        print("Not valid ranges")
+        stop("Not valid ranges")
+      }
+      
+      probability = probability / 100
+      
+      if(probability <= 0.5) {
+        val <- (1/probability)-1
+        
+        return(paste0("+", round(val*100)))
+      } else {
+        val <-(1/(1-probability))-1
+        return(paste0("-", round(val*100)))
+      }
+      
+    }, error=function(e) {
+      print("Bad Value")
+      print(e)
+      return(NA)
+    })
+  })
+    
   # Games Navigation
   observeEvent(input$gamesLink, {
     print("clicked games!")
@@ -196,10 +291,10 @@ server <- function(input, output, session) {
     s3 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
     
     plot(c(), type="b", ylim=c(min(min(s1), min(s2), min(s3)),max(max(s1), max(s2), max(s3))), xlim=c(1, 365))
-    lines(c(1:365), s1, col="red")
+    lines(c(1:365), s1, col="#cd1e39")
     lines(c(1:365), s2, col="blue")
-    lines(c(1:365), s3, col="green")
-    legend(x ="topleft", col=c("red", "green", "blue"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite"), lwd=1, lty=c(1,1,1))
+    lines(c(1:365), s3, col="#66cc33")
+    legend(x ="topleft", col=c("#cd1e39", "#66cc33", "blue"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite"), lwd=1, lty=c(1,1,1))
   }, width=800, height=400)
   
   # The main table on the projections page 
@@ -244,6 +339,7 @@ server <- function(input, output, session) {
     insertUI("html", where="afterBegin", htmlTemplate("viewGame.html", gameDate=gameDate, gameString=gameString, awayIcon=awayIcon, homeIcon=homeIcon), immediate = TRUE, session=session)
     
     selectedGame <- x
+    assign("selectedGame", x, envir=.GlobalEnv)
   }
   
   # Hack to register all of the buttons to use the same handler function above
@@ -260,37 +356,47 @@ server <- function(input, output, session) {
   # Inputs for view game calculator
   
   observeEvent(input$firstLabel, {
+    print("changed first")
     print(input$firstLabel)
+    runCalculator()
   })
   
   observeEvent(input$spread, {
     print(input$spread)
+    runCalculator()
   })
   
   observeEvent(input$probability, {
     print(input$probability)
+    runCalculator()
   })
   
   observeEvent(input$bettr, {
     print(input$bettr)
   })
   
-  result <- -9.60
-  color <- "red"
-  
-  if(result > 0) {
-    color <- "green"
+
+  print("result")
+  print(result)
+
+  safeNA <- function(x) {
+    if(is.na(x)) {
+      FALSE
+    } else {
+      x
+    }
   }
   
-  output$winnings <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result, nsmall=2, big.mark=","),"</span>")))
+    
+  output$winnings <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", if (safeNA(result() > 0)) "#66cc33" else "#cd1e39", ";\">$ ", format(round(result(), digits=2), nsmall=2, big.mark=","),"</span>")))
   
-  output$mo1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4, nsmall=2, big.mark=","),"</span>")))
+  output$mo1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", if (safeNA(result() > 0)) "#66cc33" else "#cd1e39", ";\">$ ", format(round(result(), digits=2)*4, nsmall=2, big.mark=","),"</span>")))
   
-  output$mo6 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4*6, nsmall=2, big.mark=","),"</span>")))
+  output$mo6 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", if (safeNA(result() > 0)) "#66cc33" else "#cd1e39", ";\">$ ", format(round(result(), digits=2)*4*6, nsmall=2, big.mark=","),"</span>")))
   
-  output$yr1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", color, ";\">$ ", format(result*4*12, nsmall=2, big.mark=","),"</span>")))
+  output$yr1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", if (safeNA(result() > 0)) "#66cc33" else "#cd1e39", ";\">$ ", format(round(result(), digits=2)*4*12, nsmall=2, big.mark=","),"</span>")))
   
-  output$take <- renderUI(htmlTemplate(text_="Take -354 Odds or Lower"))
+  output$take <- renderUI(htmlTemplate(text_=paste0("Take ", breakeven(), " Odds or Higer")))
 }
 
 shinyApp(ui = ui, server = server)
