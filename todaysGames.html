@@ -1,0 +1,35 @@
+<div id="home">
+    <head>
+        <meta charset="utf-8">
+        <title>Bettr Sports Betting | Games</title>
+        </head>
+    
+        <header>
+            <img onclick="window.location.reload();" id="bettr" src="bettrIcon.png"/>
+            <nav>
+                <span id="currentPage">{{ actionLink("gamesLink", "Games") }}</span>
+                {{ actionLink("predictionsLink", "Predictions") }}
+                {{ actionLink("resourcesLink", "Resources") }}
+                <a href="https://github.com/cis3296f22/bettR#readme">About</a>
+            </nav>
+        </header>
+    
+        <body>
+            <div class="transition"/>
+            
+            <h1>
+                {{ todayString }}
+            </h1>
+            
+            <div class="games">
+                <div class="grid-container">
+                    {{ getGames }}
+                </div>      
+            </div>
+         </body>
+         <footer>
+            <p id="footerText">Bettr Sports Betting 2022</p>
+            <a id="footerText" href="TOS-Disclaimer.html">Disclaimer and Terms of Service</a>
+          </footer>
+         <link rel="stylesheet" href="todaysStyles.css">
+</div>

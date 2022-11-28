@@ -1,0 +1,66 @@
+<div id="home">
+    <head>
+        <meta charset="utf-8">
+        <title>Bettr Sports Betting | View Game</title>
+        </head>
+    
+        <header>
+            <img onclick="window.location.reload();" id="bettr" src="bettrIcon.png"/>
+            <nav>
+                <span id="currentPage">{{ actionLink("gamesLink", "Games") }}</span>
+                {{ actionLink("predictionsLink", "Predictions") }}
+                {{ actionLink("resourcesLink", "Resources") }}
+                <a href="https://github.com/cis3296f22/bettR#readme">About</a>
+            </nav>
+        </header>
+    
+        <body>
+            <div class="transition"/>
+            <h1 id="firstTitle">{{ gameDate }}</h1>
+            <h1>{{ gameString }}</h1>
+    
+            <div class="matchup">
+                <img class="team-image" src="team-icons/{{awayIcon}}"/>
+                <h3 id="at">@</h3>
+                <img class="team-image"src="team-icons/{{homeIcon}}"/>
+            </div>
+
+            {{ tableOutput("gameProjections") }}
+            
+            <h2>Bet Screener</h2>
+
+            {{ textInput("firstLabel", "Amount")  }}
+            {{ textInput("spread", "Spread")  }}
+            {{ textInput("probability", "Probability")  }}
+            {{ checkboxInput("bettr", "Use Bettr Projection", value=TRUE) }}
+            
+            <div id="calcResults">
+                <h3 class="winnings">Expected Winnings</h3>
+
+                <h3 class="winnings result">{{ htmlOutput("winnings") }}</h3>
+
+    
+                <h3>Weekly for 1 Month</h4>
+
+                <h4 class="result">{{ htmlOutput("mo1") }}</h3>
+    
+                <h3>Weekly for 6 Months</h4>
+
+                <h4 class="result">{{ htmlOutput("mo6") }}</h3>
+    
+                <h3>Weekly for 1 Year</h4>
+                <h4 class="result">{{ htmlOutput("yr1") }}</h3>
+
+                <h4 id="take">
+                    {{ htmlOutput("take") }}
+                </h4>
+            </div>
+    
+        </body>
+
+        <footer>
+            <p id="footerText">Bettr Sports Betting 2022</p>
+            <a id="footerText" href="TOS-Disclaimer.html">Disclaimer and Terms of Service</a>
+          </footer>
+        <link rel="stylesheet" href="viewStyle.css">
+</div>

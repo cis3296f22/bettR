@@ -1,0 +1,196 @@
+* {
+    font-family: Helvetica, Arial, Sans-Serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+}
+
+body {
+    background-color: #333333;
+}
+
+header {
+    display: inline-block;
+    background-color: black;
+    width: 100%;
+    height: 64pt;
+}
+
+img {
+    height: 64pt;
+    width: max-content;
+    padding-left: 10%;
+}
+
+nav {
+    text-align: right;
+    float: right;
+    padding-top: 28pt;
+    padding-right: 10%;
+}
+
+a {
+    padding: 8pt;
+    text-decoration: none;
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 14pt;
+}
+
+.transition {
+    padding: 0;
+    margin-top: -8pt;
+    border: none;
+    height: 64pt;
+    width: 100%;
+    background-image: linear-gradient(black, #333333);
+    display: block;
+}
+
+#firstTitle {    
+    padding-top: 64pt;
+}
+
+h1 {
+    padding-left: 10%;
+}
+
+.matchup {
+    display: flex;
+    float: left;
+    width: 90%;
+    padding-left: 10%;
+    padding-top: 32pt;
+    padding-bottom: 32pt;
+}
+
+.team-image {
+    height: 128pt;
+    width: 128pt;
+    padding-left: 0;
+}
+
+#at {
+    line-height: 128pt;
+    text-align: center;
+    width: 16pt;
+    font-size: 32pt;
+    font-weight: bold;
+    padding-left: 16pt;
+    padding-right: 16pt;
+}
+
+h2 {
+    padding-left: 10%;
+    margin-top: 32pt;
+    width: 90%;
+    height: 32pt;
+    float: left;
+}
+
+#calcResults {
+    text-align: center;
+    margin-top: 16pt;
+}
+
+.red {
+    color: red;
+    margin-bottom: 8pt;
+}
+
+.green {
+    color: #66cc33;
+    margin-bottom: 8pt;
+}
+
+input[type=text] {
+    margin-bottom: 16pt;
+    margin-right: 16pt;
+    color: black;
+    border-radius: 4pt;
+    border: none;
+    height: 16pt;
+    width: 96pt;
+    text-align: center;
+}
+
+h3 {
+    font-size: 16pt;
+}
+
+#firstLabel-label {
+    margin-left: 10%;
+}
+
+#bettr:hover {
+    cursor: pointer;
+}
+
+#currentPage a {
+    color: white;
+}
+
+.form-group {
+    display: inline;
+}
+
+.checkbox {
+    display: inline;
+}
+
+h4 {
+    margin-top: 4pt;
+    margin-bottom: 16pt;
+    font-size: 16pt;
+    font-weight: normal;
+}
+
+h3 {
+    font-size: 18pt;
+    font-weight: normal;
+}
+
+.winnings {
+    font-weight: bold;
+    font-size: 20pt;
+}
+
+#take {
+    text-decoration: underline;
+    color:#66cc33;
+    margin-top: pt;
+    margin-bottom: 16pt;
+}
+
+table {
+    margin-left: 10%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1pt solid;
+    padding: 8pt;
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.green {
+    color: #66cc33;
+}
+
+.result {
+    padding-bottom: 16pt;
+}
+
+footer {
+    text-align: center;
+    padding-top: 32pt;
+    padding-bottom: 32pt;
+}
+
+#footerText {
+    color: rgba(256, 256, 256, 0.6);
+    font-size: 12pt;
+}
