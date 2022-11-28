@@ -1,4 +1,4 @@
-source("../getProbabilities.R", chdir = TRUE)
+source("C:/Users/aruna/bettR/getProbabilties.R", chdir = TRUE)
 library(testthat)
 
 test_that("getting future odds away for real game", {
