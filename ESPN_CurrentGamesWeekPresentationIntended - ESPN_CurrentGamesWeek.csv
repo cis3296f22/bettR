@@ -1,0 +1,47 @@
+,date,season,home_team_full_name,away_team_full_name,game_id,wp_home,wp_away
+1,2022-11-28,2023,Philadelphia 76ers,Atlanta Hawks,401468454,0.562,0.438
+2,2022-11-28,2023,Washington Wizards,Minnesota Timberwolves,401468455,0.571,0.429
+3,2022-11-28,2023,Boston Celtics,Charlotte Hornets,401468456,0.836,0.164
+4,2022-11-28,2023,Brooklyn Nets,Orlando Magic,401468457,0.88,0.12
+5,2022-11-28,2023,Toronto Raptors,Cleveland Cavaliers,401468458,0.63,0.37
+6,2022-11-28,2023,New Orleans Pelicans,Oklahoma City Thunder,401468459,0.75,0.25
+7,2022-11-28,2023,Denver Nuggets,Houston Rockets,401468460,0.827,0.173
+8,2022-11-28,2023,Utah Jazz,Chicago Bulls,401468461,0.586,0.414
+9,2022-11-28,2023,Sacramento Kings,Phoenix Suns,401468462,0.516,0.484
+10,2022-11-28,2023,Los Angeles Lakers,Indiana Pacers,401468463,0.556,0.444
+11,2022-11-29,2023,Detroit Pistons,New York Knicks,401468464,0.348,0.652
+12,2022-11-29,2023,Dallas Mavericks,Golden State Warriors,401468465,0.559,0.441
+13,2022-11-29,2023,Portland Trail Blazers,LA Clippers,401468466,0.563,0.437
+14,2022-11-30,2023,Cleveland Cavaliers,Philadelphia 76ers,401468467,0.523,0.477
+15,2022-11-30,2023,Orlando Magic,Atlanta Hawks,401468468,0.257,0.743
+16,2022-11-30,2023,Boston Celtics,Miami Heat,401468469,0.858,0.142
+17,2022-11-30,2023,Brooklyn Nets,Washington Wizards,401468470,0.601,0.399
+18,2022-11-30,2023,New York Knicks,Milwaukee Bucks,401468471,0.378,0.622
+19,2022-11-30,2023,Minnesota Timberwolves,Memphis Grizzlies,401468472,0.431,0.569
+20,2022-11-30,2023,New Orleans Pelicans,Toronto Raptors,401468473,0.523,0.477
+21,2022-11-30,2023,Oklahoma City Thunder,San Antonio Spurs,401468474,0.631,0.369
+22,2022-11-30,2023,Denver Nuggets,Houston Rockets,401468475,0.829,0.171
+23,2022-11-30,2023,Phoenix Suns,Chicago Bulls,401468476,0.703,0.297
+24,2022-11-30,2023,Utah Jazz,LA Clippers,401468477,0.738,0.262
+25,2022-11-30,2023,Sacramento Kings,Indiana Pacers,401468478,0.638,0.362
+26,2022-11-30,2023,Los Angeles Lakers,Portland Trail Blazers,401468479,0.636,0.364
+27,2022-12-01,2023,Detroit Pistons,Dallas Mavericks,401468480,0.248,0.752
+27,2022-12-02,2023,Charlotte Hornets,Washington Wizards,401468481,0.439,0.561
+28,2022-12-02,2023,Atlanta Hawks,Denver Nuggets,401468482,0.582,0.418
+29,2022-12-02,2023,Boston Celtics,Miami Heat,401468483,0.849,0.151
+30,2022-12-02,2023,Brooklyn Nets,Toronto Raptors,401468484,0.533,0.467
+31,2022-12-02,2023,Cleveland Cavaliers,Orlando Magic,401468485,0.852,0.148
+32,2022-12-02,2023,Milwaukee Bucks,Los Angeles Lakers,401468486,0.764,0.236
+33,2022-12-02,2023,Memphis Grizzlies,Philadelphia 76ers,401468487,0.518,0.482
+34,2022-12-02,2023,San Antonio Spurs,New Orleans Pelicans,401468488,0.295,0.705
+35,2022-12-02,2023,Phoenix Suns,Houston Rockets,401468489,0.844,0.156
+36,2022-12-02,2023,Utah Jazz,Indiana Pacers,401468490,0.655,0.345
+37,2022-12-02,2023,Golden State Warriors,Chicago Bulls,401468491,0.741,0.259
+38,2022-12-04,2023,New Orleans Pelicans,Denver Nuggets,401468499,0.537,0.463
+39,2022-12-04,2023,San Antonio Spurs,Phoenix Suns,401468500,0.235,0.765
+40,2022-12-04,2023,Brooklyn Nets,Boston Celtics,401468501,0.33,0.67
+41,2022-12-04,2023,Detroit Pistons,Memphis Grizzlies,401468502,0.297,0.703
+42,2022-12-04,2023,New York Knicks,Cleveland Cavaliers,401468503,0.411,0.589
+43,2022-12-04,2023,Washington Wizards,Los Angeles Lakers,401468504,0.633,0.367
+44,2022-12-04,2023,Sacramento Kings,Chicago Bulls,401468505,0.582,0.418
+45,2022-12-04,2023,Portland Trail Blazers,Indiana Pacers,401468506,0.474,0.526
