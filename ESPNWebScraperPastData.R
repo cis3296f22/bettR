@@ -16,17 +16,6 @@ get_winp_home <- function(id)
   return(wp)
 }
 
-years <- list('2018','2019','2020','2021','2022')
-months <- list('01','02','03','04','05','06','07','08','09','10','11','12')
-dfdates <- do.call(paste0, expand.grid(years, months))
-dfdates <- as.numeric(unlist(dfdates))
-otherdates <- list(201710,201711,201712,202301,202302,202303,202304)
-for (otherDate in seq_along(otherdates))
-{
-  dfdates <- append(dfdates, otherdates[otherDate])
-}
-
-
 getCombinedDf <- function(listOfDates)
 {
   dictList <- list()
@@ -43,9 +32,21 @@ getCombinedDf <- function(listOfDates)
   return(newdf)
 }
 
-newdf <- getCombinedDf(dfdates)
-newdf
+ESPNPastScrape_execute <- function(){
+  years <- list('2018','2019','2020','2021','2022')
+  months <- list('01','02','03','04','05','06','07','08','09','10','11','12')
+  dfdates <- do.call(paste0, expand.grid(years, months))
+  dfdates <- as.numeric(unlist(dfdates))
+  otherdates <- list(201710,201711,201712,202301,202302,202303,202304)
+  for (otherDate in seq_along(otherdates))
+  {
+    dfdates <- append(dfdates, otherdates[otherDate])
+  }
+  newdf <- getCombinedDf(dfdates)
+  newdf
 
-newdf <- as.data.frame(newdf)
+  newdf <- as.data.frame(newdf)
 
-write.csv(newdf, 'ESPN_PastData.csv')
+  write.csv(newdf, 'ESPN_PastData.csv')
+}
+ESPNPastScrape_execute()
