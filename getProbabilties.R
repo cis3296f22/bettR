@@ -1,6 +1,7 @@
 library(tidyverse)
 library(rvest)
 library(hoopR)
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Set working directory to source
 
 get_future_odds_away <- function(id) {
   URL <- paste("https://www.espn.com/nba/game?gameId=", id, sep = '')
