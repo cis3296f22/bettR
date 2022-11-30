@@ -18,8 +18,8 @@ ESPN['game_date'] = pd.to_datetime(ESPN['game_date'])
 ESPN['year'], ESPN['month'], ESPN['day'] = ESPN['game_date'].dt.year, ESPN['game_date'].dt.month, ESPN['game_date'].dt.day
 FiveThirtyEight['year'], FiveThirtyEight['month'], FiveThirtyEight['day'] = FiveThirtyEight['date'].dt.year, FiveThirtyEight['date'].dt.month, FiveThirtyEight['date'].dt.day
 
-#Filtering 538 to only include data of past 5 years:
-options = [2018,2019,2020,2021,2022] 
+#Filtering 538 to only include data of past 5 seasons:
+options = [2018,2019,2020,2021,2022,2023] 
 FiveThirtyEight = FiveThirtyEight.loc[FiveThirtyEight['season'].isin(options)] 
 
 #Renaming Columns:
@@ -28,9 +28,6 @@ ESPN = ESPN.rename(columns={"home_team_abb": "home_team", "away_team_abb": "away
 
 #Adding Column to 538 Data for away win probabilities:
 FiveThirtyEight['538_away_wp'] = 1 - FiveThirtyEight['538_home_wp']
-
-# Filtering out bad data from ESPN:
-ESPN = ESPN[ESPN['ESPN_home_wp'] != -1] 
 
 #Converting date column to be in same format as 538 data:
 ESPN['date'] = pd.to_datetime(ESPN["game_date"].dt.strftime('%Y-%m-%d'))
@@ -45,6 +42,23 @@ ESPN = ESPN.replace({'home_team' : teams_dict})
 ESPN = ESPN.replace({'away_team': teams_dict})
 FiveThirtyEight = FiveThirtyEight.replace({'home_team' : teams_dict})
 FiveThirtyEight = FiveThirtyEight.replace({'away_team': teams_dict})
+
+#Reading in Future ESPN Data:
+ESPNFuture = pd.read_csv("ESPN_CurrentGamesWeek.csv", index_col = 0)
+ESPNFuture['date'] = pd.to_datetime(ESPNFuture['date'])
+ESPNFuture.astype({'season': 'int32', 'wp_home': 'float', 'wp_away': 'float'})
+ESPNFuture = ESPNFuture.rename(columns={"home_team_abb": "home_team", "away_team_abb": "away_team", "wp_home": "ESPN_home_wp", "wp_away": "ESPN_away_wp"})
+teams_dict = {'CHA' : 'CHO', 'PHX' : 'PHO', 'BKN' : 'BRK', 'GS' : 'GSW', 'UTAH' : 'UTA', 'NO' : 'NOP', 'WSH' : 'WAS', 'NY' : 'NYK', 'SA' : 'SAS'}
+ESPNFuture = ESPNFuture.replace({'home_team' : teams_dict})
+ESPNFuture = ESPNFuture.replace({'away_team': teams_dict})
+ESPNFuture = ESPNFuture[['date', 'season', 'home_team', 'away_team', 'ESPN_home_wp', 'ESPN_away_wp']]
+
+#Combining Future ESPN Data with ESPN Past Data:
+ESPN = ESPN.append(ESPNFuture)
+ESPN.to_csv("temp")
+
+# Filtering out bad data from ESPN:
+ESPN = ESPN[ESPN['ESPN_home_wp'] != -1] 
 
 #New Dataframe that appends two datasets:
 combined = pd.merge(ESPN, FiveThirtyEight, on=['date', 'season', 'home_team', 'away_team'])
