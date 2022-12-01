@@ -433,7 +433,7 @@ server <- function(input, output, session) {
     dates <- as.Date(dfEval$date[(1:364)*-1])
     print(length(espn_365avg))
     lines(dates, espn_365avg*100, col="#cd1e39", lwd=width)
-    lines(dates, fte_365avg*100, col="blue", lwd=width)
+    lines(dates, fte_365avg*100, col="orange", lwd=width)
     lines(dates, model_365avg*100, col="#66cc33", lty=2, lwd=width)
     legend(x ="topleft", col=c("#cd1e39", "orange", "#66cc33"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite (Beta)"), lwd=1, lty=c(1,1,1))
   }, width=800, height=400)
