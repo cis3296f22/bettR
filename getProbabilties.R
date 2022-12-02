@@ -6,11 +6,11 @@ library(hoopR)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # Set working directory to source
 
 
-#' Retrieve Away Team Win Odds
+#' Retrieve Future Away Team Win Odds
 #' 
 #' @param id An integer gameID corresponding to a specific NBA game
 #' @return away_pb A double representing win probability
-#' 
+#' @export
 get_future_odds_away <- function(id) {
   URL <- paste("https://www.espn.com/nba/game?gameId=", id, sep = '')
   
@@ -21,7 +21,7 @@ get_future_odds_away <- function(id) {
   return(away_pb)
 }
 
-#' Retrieve Away Team Win Odds
+#' Retrieve Future Home Team Win Odds
 #' 
 #' @param id An integer gameID corresponding to a specific NBA game
 #' @return home_pb A double representing win probability
@@ -34,6 +34,9 @@ get_future_odds_home <- function(id) {
 #' 
 #' @param id An integer gameID corresponding to a specific NBA game
 #' @return None
+#' @export
+#' @examples 
+#' insert_wp_home(20221205)
 insert_wp_home <- function(id) {
   errorCheckers <- tryCatch(espn_nba_wp(game_id = id), error = function(e) e, silent=TRUE)
   if ( is.numeric(errorCheckers$code) ) {
@@ -51,6 +54,9 @@ insert_wp_home <- function(id) {
 #' 
 #' @param id An integer gameID corresponding to a specific NBA game
 #' @return None
+#' @export
+#' @examples 
+#' insert_wp_away(20221205)
 insert_wp_away <- function(id) {
   errorCheckers <- tryCatch(espn_nba_wp(game_id = id), error = function(e) e, silent=TRUE)
   if ( is.numeric(errorCheckers$code) ) {
@@ -68,6 +74,9 @@ insert_wp_away <- function(id) {
 #' 
 #' @param x An R Date Object representing a date in YYYY-DD-MM
 #' @return An R Date Object
+#' @export
+#' @examples 
+#' lastMonday(Sys.Date())
 lastMonday <- function(x) 7 * floor(as.numeric(x-1+4)/7) + as.Date(1-4, origin="1970-01-01")
 
 #' Function to retrieve the date, allowing for adding days, to be inserted into dataframes
@@ -75,6 +84,9 @@ lastMonday <- function(x) 7 * floor(as.numeric(x-1+4)/7) + as.Date(1-4, origin="
 #' @param date_string A string of the a day in format YYYY-DD-MM
 #' @param days A integer days to be added to a particular date
 #' @return A string object of a date in format YYYY-DD-MM
+#' @export
+#' @examples 
+#' get_date("2022-12-02", 3)
 get_date <- function(date_string, days) {
   return(toString(as.Date(date_string)+days))
 }
@@ -84,7 +96,9 @@ get_date <- function(date_string, days) {
 #' @param date_string A string of the a day in format YYYY-DD-MM
 #' @param days A integer days to be added to a particular date
 #' @return A string object of a date in format YYYYDDMM
-#'
+#' @export
+#' @examples 
+#' advance_day("2022-12-02", 3)
 advance_day <- function(date_string, days) {
   date_string <- toString(as.Date(date_string)+days)
   date_string <- gsub("-", '', date_string)
