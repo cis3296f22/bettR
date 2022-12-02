@@ -70,6 +70,7 @@ insert_wp_away <- function(id) {
   }
 }
 
+
 #' Function to retrieve the date of the last monday
 #' 
 #' @param x An R Date Object representing a date in YYYY-DD-MM
@@ -105,7 +106,6 @@ advance_day <- function(date_string, days) {
   return(date_string)
 }
 
-
 cdate <- toString(lastMonday(Sys.Date())) #'Get Date of last monday
 
 df_mon <- espn_nba_scoreboard(season = advance_day(cdate, 0)) #'Create dataframe for Monday's Games
@@ -135,6 +135,5 @@ df <- transform(df, game_id = as.integer(game_id))
 df$wp_home <- mapply(insert_wp_home, df$game_id)
 df$wp_away <- mapply(insert_wp_away, df$game_id)
 df <- na.omit(df)
-
 df <- apply(df,2,as.character) #not really sure why this works
-write.csv(df, 'ESPN_CurrentGamesWeek.csv')
+write.csv(df, "ESPN_CurrentGamesWeek.csv")

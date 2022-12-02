@@ -1,0 +1,13 @@
+{
+  "input": {
+    "state": "Detroit @  LA",
+    "txt1": "100",
+    "txt2": "-135"
+  },
+  "output": {
+    "txtout": "100 -135"
+  },
+  "export": {
+
+  }
+}
