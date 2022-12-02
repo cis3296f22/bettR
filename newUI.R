@@ -119,16 +119,16 @@ lookup$icon <- paste0(lookup$full, " logo.svg")
 df538 <- read.csv('FiveThirtyEight.csv')
 
 # Today's Games -> Table Rows 
-# Grab the next 7 days of games from 538
+# Grab the next 7 days of games from FiveThirtyEight
 todays <- df538[(df538$date >= as.character(Sys.Date())) & (df538$date <= as.character(Sys.Date()+7)),]
 
-# Generate unique ids for each game. This will but the button ids used with the observers
+# Generate unique ids for each game. This will be the button ids used with the observers
 todays$obs <- apply(todays, 1, FUN=function(x) { 
   game <- head(todays[x,], 1)
   gsub("-", "x", paste(game$team2, game$team1, game$date, sep="."))
   })
 
-# Generate the rows based on the 538 data
+# Generate the rows in the games table based on the FiveThirtyEight data
 getGames <- apply(todays, 1, FUN=function(x) {
     game <- head(todays[x,], 1)
     awayInfo <- lookup[lookup$abbrev == game$team2,]
@@ -153,9 +153,25 @@ getGames <- apply(todays, 1, FUN=function(x) {
                     </div>', collapse="")
     })
 
+# Turn list of rows into single string 
+getGames <- paste(getGames, collapse="")
+# Pass to html template 
+getGames <- htmlTemplate(document_=FALSE, text_=getGames)
+
+todayString <- paste("Today to ", format(Sys.Date()+7, format="%A, %B %d, %Y") ,collapse="")
+
+ui <- htmlTemplate("index.html")
+
+selectedGame <- NA
+
 # Pull in data for model evals
 dfEval <- read.csv("./finalDataframe.csv")
+
+# Look at 2019 onwards since that is the start of the raptor FiveThirtyEight model
 dfEval <- dfEval[dfEval$season >= 2019,]
+
+# Swap away and home ESPN win probs due to error in parser 
+# Away/Home is swapped for past games but not future ones
 dfEval['ESPN_home_winprob'] <- dfEval['ESPN_away_wp']
 dfEval['ESPN_away_winprob'] <- dfEval['ESPN_home_wp']
 
@@ -165,86 +181,80 @@ dfEval['ESPN_home_wp'] <- NA
 dfEval['ESPN_Pick'] <- dfEval['ESPN_home_winprob'] >= dfEval['ESPN_away_winprob']
 dfEval['FTE_Pick'] <- dfEval['X538_home_wp'] >= dfEval['X538_away_wp']
 
-# it is flipped for passed games but not for future - LMAO
-
 dfEval['TF_Outcome'] <- dfEval['Outcome'] == dfEval['home_team']
 dfEval$TF_OutcomeOnes <- as.integer(dfEval$TF_Outcome)
 
-
+# Basic linear model 
 bettr_model <- lm("TF_OutcomeOnes ~ ESPN_Pick + FTE_Pick", data=dfEval)
 dfEval$model_home_wp <- predict.lm(bettr_model, dfEval)
 dfEval$model_away_wp <- abs(1 - dfEval$model_home_wp)
 
 dfEval['model_Pick'] <- dfEval['model_home_wp'] >= dfEval['model_away_wp']
 
-# They agree 79.8% of the time
-dfEval['Agree'] <- dfEval['ESPN_Pick'] == dfEval['FTE_Pick']
-sum(dfEval['Agree'])/nrow(dfEval)
+# Sanity check to make sure models mostly agree
+# They agree ~ 79.8% of the time when properly set
+# and only about 20 or 30% when away/home were swapped
+# dfEval['Agree'] <- dfEval['ESPN_Pick'] == dfEval['FTE_Pick']
+# sum(dfEval['Agree'])/nrow(dfEval)
 
 
-
-# ESPN Accuracy
+# When each model was correct 
 dfEval$espn_corr <- dfEval$ESPN_Pick == dfEval$TF_Outcome
 dfEval$fte_corr <- dfEval$FTE_Pick == dfEval$TF_Outcome
 dfEval$model_corr <- dfEval$model_Pick == dfEval$TF_Outcome
 
+# Use 365 day moving averages for chart 
 espn_365avg <- rollmean(dfEval$espn_corr, 365)
 fte_365avg <- rollmean(dfEval$fte_corr, 365)
 model_365avg <- rollmean(dfEval$model_corr, 365)
-  # ESPN Picks correct 64.6% of the time
+
+
+# Overall model accuracies
 espn.overall <- nrow(dfEval[dfEval['ESPN_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
 fte.overall <- nrow(dfEval[dfEval['FTE_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
 model.overall <- nrow(dfEval[dfEval['model_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
 
+# 90 day model accuracies
 dfEval90 <- dfEval[dfEval$date >= Sys.Date()-90,]
 
 espn.90 <- nrow(dfEval90[dfEval90['ESPN_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
 fte.90 <- nrow(dfEval90[dfEval90['FTE_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
 model.90 <- nrow(dfEval90[dfEval90['model_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
 
+# 1 year model accuracies
 dfEval365 <- dfEval[dfEval$date >= Sys.Date()-365,]
 
 espn.365 <- nrow(dfEval365[dfEval365['ESPN_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
 fte.365 <- nrow(dfEval365[dfEval365['FTE_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
 model.365 <- nrow(dfEval365[dfEval365['model_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
 
-# FTE Picks correct 62.7% of the time
 
-
-# Plot Accuracy over time
-
-# Lookup Key
+# Key to map game/button ids to values in our models table  
 dfEval['Key'] <- gsub("-", "x", paste(dfEval$away_team, dfEval$home_team, dfEval$date, sep="."))
-#paste(dfEval['home_team'], dfEval['away_team'])[1]
+
 dfEval <- dfEval[order(dfEval$date),]
-#dfTest <- dfTest[dfTest$date > Sys.Date()-90,]
+
 dfEval$date <- as.Date(dfEval$date)
 dfEval$ones <- rep(1, nrow(dfEval))
 
-# Cumulative Sum for each date
 
-
-getGames <- paste(getGames, collapse="")
-
-getGames <- htmlTemplate(document_=FALSE, text_=getGames)
-
-#           X       date season team1 team2 fivethirtyeight_home_wp
-#72314 72314 2022-11-23   2023   GSW   LAC                0.763602
-#print(head(todays[x,], 1))
-#print('------')
-
-todayString <- paste("Today to ", format(Sys.Date()+7, format="%A, %B %d, %Y") ,collapse="")
-
-ui <- htmlTemplate("index.html")
-
-selectedGame <- NA
-
+#' Defines the behavior of the main server loop. Contains logic for handling user interaction from reactive elements, switching between tabs, and generating displayed elements such as plots and tables not otherwise externally defined.
+#' 
+#' @param inputs list of input names to reference depending on the containers
+#' @param outputs a list of outputs variable names to reference depending on the containers
+#' @param session The session info of the app. 
+#' @return None
 server <- function(input, output, session) { 
   
+  #' Converts a percentage to a display strinknitrg for use in tables
+  #' @param x A number representing a percentage you wish to display. 
+  #' @return A string of a number rounded with one decimal point
   displayPer <- function(x) {
     return(as.character(round(x, digits=1)))
   }
   
+  #' Calculates expected profit using the current input values
+  #' @return The expected profit as a numeric or NA if values are invalid
   runCalculator <- function() {
     tryCatch({
       # Validated Against 
@@ -260,7 +270,6 @@ server <- function(input, output, session) {
       
       # Positive - Bet 100, Win 100+spread 
       # Negative - Bet The Spread, win the spread + 100
-      
       
       validNumbers <- is.na(probability) | is.na(spread) | is.na(wager)
       
@@ -341,6 +350,8 @@ server <- function(input, output, session) {
     })
   })
   
+  #' Calculates expected profit using the current input values
+  #' @return DataFrame of model outputs for selected game
   renderGameTable <- function() {
     output$gameProjections <- renderTable({ 
       # The main table when viewing a game
@@ -348,15 +359,12 @@ server <- function(input, output, session) {
       game <- dfEval[dfEval$Key == selectedGame,]
       print("Game is")
       print(selectedGame)
-      #print(gameValue())
       print(game)
       
       viewModels <- data.frame(
         Source=c("Bettr Composite (Beta)", "ESPN", "FiveThirtyEight"),
         Home.Win=c(displayPer(game$model_home_wp*100), displayPer(game$ESPN_away_winprob*100), displayPer(game$X538_home_wp*100)),
         Away.Win=c(displayPer(game$model_away_wp*100), displayPer(game$ESPN_home_winprob*100), displayPer(game$X538_away_wp*100)),
-        #Home.Win=c("", "", ""),
-        #Away.Win=c("", "", ""),
         Accuracy90=c(displayPer(model.90*100), displayPer(espn.90*100), displayPer(fte.90*100)),
         Accuracy1yr=c(displayPer(model.365*100), displayPer(espn.365*100), displayPer(fte.365*100)),
         AccuracyOverall=c(displayPer(model.overall*100), displayPer(espn.overall*100), displayPer(fte.overall*100))
@@ -369,6 +377,9 @@ server <- function(input, output, session) {
   
   # Logic for the view game page
   
+  #' Generates proper game information and passes to view game screen upon button selection
+  #' @param x the id of the button and game which was selected 
+  #' @return None
   handleButton <- function(x) {
     gameInfo <- todays[todays$obs == x,]
     gameDate <- format(as.Date(gameInfo$date), format="%A, %B %d, %Y")
@@ -391,9 +402,7 @@ server <- function(input, output, session) {
   
   # Hack to register all of the buttons to use the same handler function above
   # The ID of the button is also passed so we know what game to show
-  
-  # I am so proud of this code, def gonna be on my slide
-  lapply(todays$obs, function(x) {
+    lapply(todays$obs, function(x) {
     eval(parse(text=paste0(
       'observeEvent(input$', x, ', {
         handleButton(x)
@@ -425,10 +434,6 @@ server <- function(input, output, session) {
   output$projectionsPlot <- renderPlot({
     
     plot(c(), type="b", xlim=c(min(dfEval$date[365]),max(dfEval$date)), ylim=c(55,75), xlab="Date", ylab="Accuracy (%)", main="Model Accuracy Over Time")
-    print("plot")
-    #print(dfEval)
-    print(length(dfEval$date))
-    # print(length(s1))
     width <- 3
     dates <- as.Date(dfEval$date[(1:364)*-1])
     print(length(espn_365avg))
@@ -439,8 +444,6 @@ server <- function(input, output, session) {
   }, width=800, height=400)
   
   # The main table on the projections page 
-  
-  
   output$projectionsTable <- renderTable({ 
   
     exampleModels <- data.frame(
@@ -455,12 +458,7 @@ server <- function(input, output, session) {
     exampleModels
     })
   
-  
-  
-  
-  
   # Inputs for view game calculator
-  
   observeEvent(input$firstLabel, {
     print("changed first")
     print(input$firstLabel)
