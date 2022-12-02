@@ -1,36 +1,34 @@
-\name{processUpcomingGames() documentation}
-\alias{processUpcomingGames()}
+\name{parseGameForDay()}
+\alias{parseGameForDay()}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+#' Compiles games into away team at home team format for drop down list usage.
 }
 \usage{
-Process upcoming games from the ESPN current games for the week csv file
+parseGameForDay()( Once you have a data frame of the teams playing and their respective win probabilities, call this function in order to
+  create a list for the drop down selection menu. This will return a list object of the teams in away_team @ home team format)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{None}{
-%%     ~~Describe \code{x} here~~
+  \item{gameTables}{
+    data frame of upcoming games
 }
+\item{date}{current date in sys.Date() format}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+A list of upcoming games in away_team @ home_team format 
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-Keviin Jang
+Kevin Jang
 }
 \note{
 %%  ~~further notes~~
@@ -42,9 +40,7 @@ Keviin Jang
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## processUpcomingGames()
-
-
+    parsegameForDay(gameDataFrame,2022-11-19)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }

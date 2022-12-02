@@ -5,6 +5,11 @@ library(reticulate)
 library(plyr)
 library(dplyr)
 
+#' executes all web scrapes sequentially and outputs their results into the csv files defined inside each script
+#'
+#' @param None
+#' @return None
+#' 
 execute_All <- function(){
   working_Dir <- getwd()
   setwd(working_Dir)

@@ -1,20 +1,19 @@
-\name{processUpcomingGames() documentation}
-\alias{processUpcomingGames()}
+\name{server()}
+\alias{server()}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+Defines the behaviour of the server function}
 \usage{
-Process upcoming games from the ESPN current games for the week csv file
+server(inputs, outputs, session)(Defines the server behaviour by taking input variables, feeding them into functions and returning these values into output. )
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{None}{
-%%     ~~Describe \code{x} here~~
-}
+  \item{inputs}{list of input variables defined by the containers}
+  \item{outputs}{list of output variables defined by the containers}
+  \item{session}{session information}
 }
 \details{
 %%  ~~ If necessary, more details than the description above ~~
@@ -30,8 +29,7 @@ Process upcoming games from the ESPN current games for the week csv file
 %% ~put references to the literature/web site here ~
 }
 \author{
-Keviin Jang
-}
+Kevin Jang}
 \note{
 %%  ~~further notes~~
 }
@@ -42,9 +40,7 @@ Keviin Jang
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## processUpcomingGames()
-
-
+    server(inputs, outputs, session)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }
