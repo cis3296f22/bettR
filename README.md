@@ -28,7 +28,7 @@ Bettr has been tested on Firefox and Chrome.
 - Download the R programming language (this should be an option when downloading R-Studio Desktop) but you can also download [here](https://cran.r-project.org/bin/windows/base/)
 - Clone the Git Repository into your desired location
 - Open the Bettr folder
-- Open the  file in RStudio
+- Open the newUI.R file in RStudio
 - Press the green Run App button on the top right of the code editing section (you can alternatively click the Run button that lets you run the code line by line)
 - Depending on what is installed when you download R, you may need to install some additional libraries. These include (shiny, shinydashboard, tidyverse, rvest). There are multiple ways to download/install libraries. In RStudio go to Tools → Install Packages and in the Install from option select Repository (CRAN) and then specify the packages you want. In classic R IDE go to Packages → Install package(s) , select a mirror and install the package.
 - At this point, Bettr will run and open in your browser
@@ -44,20 +44,26 @@ NOTE: Steps remain the same for Windows, macOS, and Linux.
 
 ## Resources and References:
 538 CSVs: 
-- https://data.fivethirtyeight.com/ 
+- https://data.fivethirtyeight.com/
+
 ESPN:
 - https://www.espn.com/ 
+
 Open Source Contribution:
 - https://github.com/jmhayes3/fivethirtyeight_scraper 
+
 References:
 - https://www.vegasinsider.com/betting-odds-calculator/ 
 - https://www.fangraphs.com/livescoreboard.aspx 
+
 Resources to learn more about sports betting: 
 - https://www.sportsbettingdime.com/guides/betting-101/ 
 - Ed Miller & Matthew Davidow’s The Logic of Sports Betting
+
 Resources to learn more about R and the R Shiny library:
 - Learn R: https://www.w3schools.com/r/ 
 - Learn R Shiny: https://shiny.rstudio.com/tutorial/ 
+
 Losses:
 - https://www.legalsportsreport.com/sports-betting/revenue/
 
