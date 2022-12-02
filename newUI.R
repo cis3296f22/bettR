@@ -4,7 +4,7 @@ library(shinydashboard)
 library(zoo)
 
 # May want to set working directory to where it is run
-setwd("/Users/JaredStef/Developer/BettR/")
+setwd("../BettR/")
 
 # DataFrame mapping 538 Team Abbreviations to Full Names and Icons
 lookup <- data.frame(
