@@ -2,6 +2,14 @@ library(hoopR)
 library(tidyverse)
 library(plyr)
 
+#' Function to get win probability for home team
+#'
+#' @param id The game id for a given NBA game
+#'
+#' @return the win probability predicted by ESPN, or -1 if none available
+#' @export
+#'
+#' @examples get_winp_home(400899374)
 get_winp_home <- function(id)  
 {
   wp = -1
@@ -16,6 +24,16 @@ get_winp_home <- function(id)
   return(wp)
 }
 
+#' Function to get the dataframe that combines the data from ESPN based on a list of a dates.
+#' It gathers the data into a dataframe from each date in the list, merges the dataframes, and cleans the data.
+#' It also calls the function get_winpb_home in order to get the win probabilities
+#'
+#' @param listOfDates: the list of desired dates to get data for
+#'
+#' @return the combined dataframe of ESPN NBA data
+#' @export
+#'
+#' @examples getCombinedDf(list(201710,201711,201712,202301,202302,202303,202304))
 getCombinedDf <- function(listOfDates)
 {
   dictList <- list()
@@ -32,6 +50,14 @@ getCombinedDf <- function(listOfDates)
   return(newdf)
 }
 
+#' Function to Execute ESPN Web Scraper. 
+#' Creates list of dates and calls getCombinedDf using this list of dates.
+#' The data frame is then written to the csv 'ESPN_PastData.csv'
+#'
+#' @return writes csv 'ESPN_PastData.csv'
+#' @export
+#'
+#' @examples ESPNPastScrape_execute()
 ESPNPastScrape_execute <- function(){
   years <- list('2018','2019','2020','2021','2022')
   months <- list('01','02','03','04','05','06','07','08','09','10','11','12')
