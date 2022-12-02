@@ -1,5 +1,5 @@
 #'The purpose of this R file is to retrieve win probabilities from the current week's NBA games from ESPN, and combine them in a singular R DataFrame
-
+#' To be used in the front end
 library(tidyverse)
 library(rvest)
 library(hoopR)
