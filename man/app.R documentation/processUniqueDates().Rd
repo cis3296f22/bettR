@@ -1,18 +1,18 @@
-\name{processUpcomingGames() documentation}
-\alias{processUpcomingGames()}
+\name{processUniqueDates()}
+\alias{processUniqueDates()}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Reads in and processes data frame with no double index columns and returns a list of unique dates in YYYY-MM-DD format
 }
 \usage{
-Process upcoming games from the ESPN current games for the week csv file
+processUniqueDates() Grabs the dates of the upcoming games, tests for uniqueness, if the date is unique to the list to be returned, appends to the end of the list, otherwise, moves to the next value
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{None}{
+  \item{gameTables}{
 %%     ~~Describe \code{x} here~~
 }
 }
@@ -30,7 +30,7 @@ Process upcoming games from the ESPN current games for the week csv file
 %% ~put references to the literature/web site here ~
 }
 \author{
-Keviin Jang
+Kevin Jang
 }
 \note{
 %%  ~~further notes~~
@@ -42,9 +42,7 @@ Keviin Jang
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## processUpcomingGames()
-
-
+## processUniqueDates(gameDataFrame)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }

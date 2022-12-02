@@ -1,14 +1,13 @@
-\name{processUpcomingGames() documentation}
-\alias{processUpcomingGames()}
+\name{execute_All()}
+\alias{execute_All()}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
-}
+executes all web scrapes sequentially and outputs their results into the csv files defined inside each script}
 \usage{
-Process upcoming games from the ESPN current games for the week csv file
+execute_All()(calls the execute functions inside of each scripts. These execute functions should be the code to run the code inside its respective script)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,17 +19,13 @@ Process upcoming games from the ESPN current games for the week csv file
 %%  ~~ If necessary, more details than the description above ~~
 }
 \value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
+None
 }
 \references{
 %% ~put references to the literature/web site here ~
 }
 \author{
-Keviin Jang
+Kevin jang
 }
 \note{
 %%  ~~further notes~~
@@ -42,9 +37,7 @@ Keviin Jang
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## processUpcomingGames()
-
-
+  execute_All()
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }

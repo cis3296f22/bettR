@@ -4,8 +4,12 @@ library(shinythemes)
 library(tidyverse)
 library(shinydashboard)
 library(rvest)
+library(roxygen2)
 
-
+#' Process ESPN_currentGamesWeek csv file into a data frame
+#'
+#' @param None
+#' @return None
 processUpcomingGames <- function(){
   upcomingGames <- read.csv('../ESPN_currentGamesWeek.csv')
   
@@ -27,12 +31,21 @@ processUpcomingGames <- function(){
   return(gameTables)
 }
 
+#' Process a dataframe and return a list of unique dates
+#'
+#' @param gameTables data frame
+#' @return a list of unique dates
 processUniqueDates <-function(gameTables){
   uniqueDates <- unique(gameTables[,1])
   return(uniqueDates)
   
 }
 
+#' Compiles games into away team at home team format for drop down list usage.
+#'
+#' @param gameTables data frame
+#' @param date a date in Sys.Date() format
+#' @return list of upcoming games
 parseGamesForDay <- function(gamesTableInput, date){
   gamesToSelect <- list()
   
@@ -47,6 +60,12 @@ parseGamesForDay <- function(gamesTableInput, date){
   return(gamesToSelect)
 }
 
+#' Gets the probabilities of winning for the specific upcoming game and returns the probability for the away team
+#'
+#' @param string string of the upcoming game away team at home team
+#' @param listOfDays a list of days for the specific game
+#' @param listOfGames a list of the upcoming games
+#' @return probability of the away team winning
 sendOddsOfGameToCalculator <- function(string, listOfDays, listOfGames){
   gameInfo <- str_split(string, " @ ")
   gameInfo <- gameInfo[[1]]
@@ -166,7 +185,13 @@ ui <- fluidPage(theme = shinytheme("cerulean"),
 )
 # fluidPage
 
-# Define server function  
+ 
+#' Defines the behaviour of the server function
+#'
+#' @param inputs list of input names to reference depending on the containers
+#' @param outputs a list of outputs variable names to reference depending on the containers
+#' @param session The session info of the app. 
+#' @return None
 server = function(input, output, session){
   currentTable <-processUpcomingGames()
   distinctDates <- processUniqueDates(currentTable)

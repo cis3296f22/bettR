@@ -1,18 +1,20 @@
-\name{processUpcomingGames() documentation}
-\alias{processUpcomingGames()}
+\name{sendOddsOfgameToCalculator()}
+\alias{sendOddsOfgameToCalculator()}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 %%  ~~function to do ... ~~
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Gets the probabilities of winning for the specific upcoming game and returns the probability for the away team
 }
 \usage{
-Process upcoming games from the ESPN current games for the week csv file
+sendOddsOfGameToCalculator()(splits the string value into away team and home team. Then looks for the game inside of listOfGames and returns the away teams winning probability)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{None}{
+  \item{string}{ string of the upcoming game away team at home team}
+  \item{listOfDays}{ a list of days for the specific game}
+  \item{listOfGames}{ a list of the upcoming games}
 %%     ~~Describe \code{x} here~~
 }
 }
@@ -30,7 +32,7 @@ Process upcoming games from the ESPN current games for the week csv file
 %% ~put references to the literature/web site here ~
 }
 \author{
-Keviin Jang
+Kevin Jang
 }
 \note{
 %%  ~~further notes~~
@@ -42,9 +44,7 @@ Keviin Jang
 %% ~~objects to See Also as \code{\link{help}}, ~~~
 }
 \examples{
-## processUpcomingGames()
-
-
+    sendOddsOfGameToCalculator(Detroit @ Philadelphia, list(2022-11-19, 2022-11,20), upcomingGamesProbabilities)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory (show via RShowDoc("KEYWORDS")):
 % \keyword{ ~kwd1 }
