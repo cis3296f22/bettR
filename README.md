@@ -9,8 +9,8 @@ Bettr provides users with betting information and education tools.
 With the legalization of sports betting many sports fans are putting their money where their mouth is for the first time. Most users lose money, however, due to following useless heuristics or pundits. Bettr's aim is to create a web dashboard displaying the current spreads for sports games along with models from multiple publicly available sites side-by-side with their relative historical performances. Users can enter their bets and receive their expected payout/loss and break even point. Bettr allows users to have statistically informed insight into their betting and helps society mitigate the negative externalities of betting through education.
 
 ## For User to access the BettR web app.
-https://bettr.shinyapps.io/bettr/
-Click link (or copy and paste into your web browser.)
+https://BettrSportsBetting.com/
+The web server is currently down. Users must ran manually until server is back online.
 Bettr has been tested on Firefox and Chrome.
 
 - The front page you are directed to will be our homepage which includes links and an explaination of the resources on the site

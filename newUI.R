@@ -1,9 +1,10 @@
 # Load R packages
 library(shiny)
 library(shinydashboard)
+library(zoo)
 
 # May want to set working directory to where it is run
-setwd(".")
+setwd("/Users/JaredStef/Developer/BettR/")
 
 # DataFrame mapping 538 Team Abbreviations to Full Names and Icons
 lookup <- data.frame(
@@ -152,7 +153,79 @@ getGames <- apply(todays, 1, FUN=function(x) {
                     </div>', collapse="")
     })
 
+# Pull in data for model evals
+dfEval <- read.csv("./finalDataframe.csv")
+dfEval <- dfEval[dfEval$season >= 2019,]
+dfEval['ESPN_home_winprob'] <- dfEval['ESPN_away_wp']
+dfEval['ESPN_away_winprob'] <- dfEval['ESPN_home_wp']
+
+dfEval['ESPN_away_wp'] <- NA
+dfEval['ESPN_home_wp'] <- NA
+
+dfEval['ESPN_Pick'] <- dfEval['ESPN_home_winprob'] >= dfEval['ESPN_away_winprob']
+dfEval['FTE_Pick'] <- dfEval['X538_home_wp'] >= dfEval['X538_away_wp']
+
+# it is flipped for passed games but not for future - LMAO
+
+dfEval['TF_Outcome'] <- dfEval['Outcome'] == dfEval['home_team']
+dfEval$TF_OutcomeOnes <- as.integer(dfEval$TF_Outcome)
+
+
+bettr_model <- lm("TF_OutcomeOnes ~ ESPN_Pick + FTE_Pick", data=dfEval)
+dfEval$model_home_wp <- predict.lm(bettr_model, dfEval)
+dfEval$model_away_wp <- abs(1 - dfEval$model_home_wp)
+
+dfEval['model_Pick'] <- dfEval['model_home_wp'] >= dfEval['model_away_wp']
+
+# They agree 79.8% of the time
+dfEval['Agree'] <- dfEval['ESPN_Pick'] == dfEval['FTE_Pick']
+sum(dfEval['Agree'])/nrow(dfEval)
+
+
+
+# ESPN Accuracy
+dfEval$espn_corr <- dfEval$ESPN_Pick == dfEval$TF_Outcome
+dfEval$fte_corr <- dfEval$FTE_Pick == dfEval$TF_Outcome
+dfEval$model_corr <- dfEval$model_Pick == dfEval$TF_Outcome
+
+espn_365avg <- rollmean(dfEval$espn_corr, 365)
+fte_365avg <- rollmean(dfEval$fte_corr, 365)
+model_365avg <- rollmean(dfEval$model_corr, 365)
+  # ESPN Picks correct 64.6% of the time
+espn.overall <- nrow(dfEval[dfEval['ESPN_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
+fte.overall <- nrow(dfEval[dfEval['FTE_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
+model.overall <- nrow(dfEval[dfEval['model_Pick'] == dfEval['TF_Outcome'],])/nrow(dfEval)
+
+dfEval90 <- dfEval[dfEval$date >= Sys.Date()-90,]
+
+espn.90 <- nrow(dfEval90[dfEval90['ESPN_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
+fte.90 <- nrow(dfEval90[dfEval90['FTE_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
+model.90 <- nrow(dfEval90[dfEval90['model_Pick'] == dfEval90['TF_Outcome'],])/nrow(dfEval90)
+
+dfEval365 <- dfEval[dfEval$date >= Sys.Date()-365,]
+
+espn.365 <- nrow(dfEval365[dfEval365['ESPN_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
+fte.365 <- nrow(dfEval365[dfEval365['FTE_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
+model.365 <- nrow(dfEval365[dfEval365['model_Pick'] == dfEval365['TF_Outcome'],])/nrow(dfEval365)
+
+# FTE Picks correct 62.7% of the time
+
+
+# Plot Accuracy over time
+
+# Lookup Key
+dfEval['Key'] <- gsub("-", "x", paste(dfEval$away_team, dfEval$home_team, dfEval$date, sep="."))
+#paste(dfEval['home_team'], dfEval['away_team'])[1]
+dfEval <- dfEval[order(dfEval$date),]
+#dfTest <- dfTest[dfTest$date > Sys.Date()-90,]
+dfEval$date <- as.Date(dfEval$date)
+dfEval$ones <- rep(1, nrow(dfEval))
+
+# Cumulative Sum for each date
+
+
 getGames <- paste(getGames, collapse="")
+
 getGames <- htmlTemplate(document_=FALSE, text_=getGames)
 
 #           X       date season team1 team2 fivethirtyeight_home_wp
@@ -167,6 +240,11 @@ ui <- htmlTemplate("index.html")
 selectedGame <- NA
 
 server <- function(input, output, session) { 
+  
+  displayPer <- function(x) {
+    return(as.character(round(x, digits=1)))
+  }
+  
   runCalculator <- function() {
     tryCatch({
       # Validated Against 
@@ -262,6 +340,65 @@ server <- function(input, output, session) {
       return(NA)
     })
   })
+  
+  renderGameTable <- function() {
+    output$gameProjections <- renderTable({ 
+      # The main table when viewing a game
+      
+      game <- dfEval[dfEval$Key == selectedGame,]
+      print("Game is")
+      print(selectedGame)
+      #print(gameValue())
+      print(game)
+      
+      viewModels <- data.frame(
+        Source=c("Bettr Composite (Beta)", "ESPN", "FiveThirtyEight"),
+        Home.Win=c(displayPer(game$model_home_wp*100), displayPer(game$ESPN_away_winprob*100), displayPer(game$X538_home_wp*100)),
+        Away.Win=c(displayPer(game$model_away_wp*100), displayPer(game$ESPN_home_winprob*100), displayPer(game$X538_away_wp*100)),
+        #Home.Win=c("", "", ""),
+        #Away.Win=c("", "", ""),
+        Accuracy90=c(displayPer(model.90*100), displayPer(espn.90*100), displayPer(fte.90*100)),
+        Accuracy1yr=c(displayPer(model.365*100), displayPer(espn.365*100), displayPer(fte.365*100)),
+        AccuracyOverall=c(displayPer(model.overall*100), displayPer(espn.overall*100), displayPer(fte.overall*100))
+      )
+      
+      names(viewModels) <- c("Source", "Home Win %", "Away Win %", "90 Day Accuracy %", "1 Year Accuracy %", "Overall Accuracy %")
+      viewModels
+    })
+  }
+  
+  # Logic for the view game page
+  
+  handleButton <- function(x) {
+    gameInfo <- todays[todays$obs == x,]
+    gameDate <- format(as.Date(gameInfo$date), format="%A, %B %d, %Y")
+    gameString <- paste0(lookup[lookup$abbrev == gameInfo$team2,]$full, " @ ", lookup[lookup$abbrev == gameInfo$team1,]$full)
+    
+    awayIcon <- lookup[lookup$abbrev == gameInfo$team2,]$icon
+    homeIcon <- lookup[lookup$abbrev == gameInfo$team1,]$icon
+    
+    print("previously selected")
+    print(selectedGame)
+    selectedGame <<- x
+    
+    print("New Selected")
+    print(selectedGame)
+    
+    renderGameTable()
+    removeUI("#home", immediate = TRUE, session=session)
+    insertUI("html", where="afterBegin", htmlTemplate("viewGame.html", gameDate=gameDate, gameString=gameString, awayIcon=awayIcon, homeIcon=homeIcon), immediate = TRUE, session=session)
+  }
+  
+  # Hack to register all of the buttons to use the same handler function above
+  # The ID of the button is also passed so we know what game to show
+  
+  # I am so proud of this code, def gonna be on my slide
+  lapply(todays$obs, function(x) {
+    eval(parse(text=paste0(
+      'observeEvent(input$', x, ', {
+        handleButton(x)
+      })')))
+  })
     
   # Games Navigation
   observeEvent(input$gamesLink, {
@@ -286,72 +423,41 @@ server <- function(input, output, session) {
   
   # The main plot on the projections page
   output$projectionsPlot <- renderPlot({
-    s1 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
-    s2 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
-    s3 <- cumsum(sample(c(-1, 1), 365, replace=TRUE))
     
-    plot(c(), type="b", ylim=c(min(min(s1), min(s2), min(s3)),max(max(s1), max(s2), max(s3))), xlim=c(1, 365))
-    lines(c(1:365), s1, col="#cd1e39")
-    lines(c(1:365), s2, col="blue")
-    lines(c(1:365), s3, col="#66cc33")
-    legend(x ="topleft", col=c("#cd1e39", "#66cc33", "blue"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite"), lwd=1, lty=c(1,1,1))
+    plot(c(), type="b", xlim=c(min(dfEval$date[365]),max(dfEval$date)), ylim=c(55,75), xlab="Date", ylab="Accuracy (%)", main="Model Accuracy Over Time")
+    print("plot")
+    #print(dfEval)
+    print(length(dfEval$date))
+    # print(length(s1))
+    width <- 3
+    dates <- as.Date(dfEval$date[(1:364)*-1])
+    print(length(espn_365avg))
+    lines(dates, espn_365avg*100, col="#cd1e39", lwd=width)
+    lines(dates, fte_365avg*100, col="orange", lwd=width)
+    lines(dates, model_365avg*100, col="#66cc33", lty=2, lwd=width)
+    legend(x ="topleft", col=c("#cd1e39", "orange", "#66cc33"), legend=c("ESPN", "FiveThirtyEight","Bettr Composite (Beta)"), lwd=1, lty=c(1,1,1))
   }, width=800, height=400)
   
   # The main table on the projections page 
   
-  exampleModels <- data.frame(
-    Source=c("Bettr Composite", "ESPN", "FiveThirtyEight"),
-    Start.Date=c("11-04-2022", "09-01-2015", "09-01-2015"),
-    Accuracy90=c(0.82, 0.71, 0.78),
-    Accuracy1yr=c(0.82, 0.71, 0.84),
-    AccuracyOverall=c(0.81, 0.77, 0.80)
-  )
-  names(exampleModels) <- c("Source", "Start Date", "90 Day Accuracy", "1 Year Accuracy", "Overall Accuracy")
   
-  output$projectionsTable <- renderTable({ exampleModels })
+  output$projectionsTable <- renderTable({ 
   
-  # The main table when viewing a game
+    exampleModels <- data.frame(
+      Source=c("Bettr Composite (Beta)", "ESPN", "FiveThirtyEight"),
+      Start.Date=c(rep(min(as.character(dfEval$date)), 3)),
+      Accuracy90=c(displayPer(model.90*100), displayPer(espn.90*100), displayPer(fte.90*100)),
+      Accuracy1yr=c(displayPer(model.365*100), displayPer(espn.365*100), displayPer(fte.365*100)),
+      AccuracyOverall=c(displayPer(model.overall*100), displayPer(espn.overall*100), displayPer(fte.overall*100))
+    )
+    names(exampleModels) <- c("Source", "Start Date", "90 Day Accuracy", "1 Year Accuracy", "Overall Accuracy")
+      
+    exampleModels
+    })
   
-  viewModels <- data.frame(
-    Source=c("Bettr Composite", "ESPN", "FiveThirtyEight"),
-    Home.Win=c("78%", "85%", "82%"),
-    Away.Win=c("22%", "15%", "18%"),
-    Accuracy90=c(0.82, 0.71, 0.78),
-    Accuracy1yr=c(0.82, 0.71, 0.84),
-    AccuracyOverall=c(0.81, 0.77, 0.80)
-  )
   
-  names(viewModels) <- c("Source", "Home Win %", "Away Win %", "90 Day Accuracy", "1 Year Accuracy", "Overall Accuracy")
   
-  output$gameProjections <- renderTable({ viewModels })
   
-  # Logic for the view game page
-  
-  handleButton <- function(x) {
-    gameInfo <- todays[todays$obs == x,]
-    gameDate <- format(as.Date(gameInfo$date), format="%A, %B %d, %Y")
-    gameString <- paste0(lookup[lookup$abbrev == gameInfo$team2,]$full, " @ ", lookup[lookup$abbrev == gameInfo$team1,]$full)
-    
-    awayIcon <- lookup[lookup$abbrev == gameInfo$team2,]$icon
-    homeIcon <- lookup[lookup$abbrev == gameInfo$team1,]$icon
-    
-    removeUI("#home", immediate = TRUE, session=session)
-    insertUI("html", where="afterBegin", htmlTemplate("viewGame.html", gameDate=gameDate, gameString=gameString, awayIcon=awayIcon, homeIcon=homeIcon), immediate = TRUE, session=session)
-    
-    selectedGame <- x
-    assign("selectedGame", x, envir=.GlobalEnv)
-  }
-  
-  # Hack to register all of the buttons to use the same handler function above
-  # The ID of the button is also passed so we know what game to show
-  
-  # I am so proud of this code, def gonna be on my slide
-  lapply(todays$obs, function(x) {
-    eval(parse(text=paste0(
-      'observeEvent(input$', x, ', {
-        handleButton(x)
-      })')))
-  })
   
   # Inputs for view game calculator
   
@@ -396,7 +502,7 @@ server <- function(input, output, session) {
   
   output$yr1 <- renderUI(htmlTemplate(text_=paste0("<span style=\"color:", if (safeNA(result() > 0)) "#66cc33" else "#cd1e39", ";\">$ ", format(round(result(), digits=2)*4*12, nsmall=2, big.mark=","),"</span>")))
   
-  output$take <- renderUI(htmlTemplate(text_=paste0("Take ", breakeven(), " Odds or Higer")))
+  output$take <- renderUI(htmlTemplate(text_=paste0("Take ", breakeven(), " Odds or Higher")))
 }
 
 shinyApp(ui = ui, server = server)
